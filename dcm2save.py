@@ -34,38 +34,76 @@ materialSwitch = 250
 
 import dicom
 
-finalStr = ""
-
-countX = 0
-countY = 0
-countZ = 0
-
 
 materialMatrix = ["GRASS", "SAND", "BRICK", "STONE"]
 materialMatrixL = len(materialMatrix)
 
-for z in dcmFiles:
-	print z
-	ds = dicom.read_file(z)
-	
-	countX = 0
-	for x in ds.pixel_array:
-	
-		countY = 0
-		for y in x:
-			if y >= minVal and y <= maxVal:
-				material = "GRASS"
-				for i in xrange(materialMatrixL):
-					if y > minVal + materialSwitch * i:
-						material = materialMatrix[i]
+def getUncompressed():
+	finalStr = ""
 
-				finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=countX, y=countY, z=countZ-2, mat=material)
-				#finalStr += str(y) + ","
-			countY += 1
-		countX += 1
-	countZ += 1
-	#finalStr += "\n"
-		
+	countX = 0
+	countY = 0
+	countZ = 0
+	for z in dcmFiles:
+		print z
+		ds = dicom.read_file(z)
+
+		countX = 0
+		for x in ds.pixel_array:
+
+			countY = 0
+			for y in x:
+				if y >= minVal and y <= maxVal:
+					material = "GRASS"
+					for i in xrange(materialMatrixL):
+						if y > minVal + materialSwitch * i:
+							material = materialMatrix[i]
+
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=countX, y=countY, z=countZ-2, mat=material)
+					#finalStr += str(y) + ","
+				countY += 1
+			countX += 1
+		countZ += 1
+		#finalStr += "\n"
+	return finalStr
+
+def getCompressed():
+	finalStr = ""
+
+	countX = 0
+	countY = 0
+	countZ = 0
+	for z in dcmFiles:
+		print z
+		ds = dicom.read_file(z)
+		pixel_bytes = ds.PixelData
+		#print pixel_bytes
+		#print ds.items()[0]
+		print ds.__dict__
+		return pixel_bytes
+		countX = 0
+		for x in ds.pixel_array:
+
+			countY = 0
+			for y in x:
+				if y >= minVal and y <= maxVal:
+					material = "GRASS"
+					for i in xrange(materialMatrixL):
+						if y > minVal + materialSwitch * i:
+							material = materialMatrix[i]
+
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=countX, y=countY, z=countZ-2, mat=material)
+					#finalStr += str(y) + ","
+				countY += 1
+			countX += 1
+		countZ += 1
+		#finalStr += "\n"
+	return finalStr
+
+#fh = open('testImg', "w")
+#fh.write(getCompressed())
+#fh.close()
+#exit()
 #print finalStr
-sav.write(finalStr)
+sav.write(getUncompressed())
 sav.close()
