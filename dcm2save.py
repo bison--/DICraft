@@ -2,7 +2,8 @@
 
 
 import sys, os
-#print 'Hello World'
+import numpy
+import pnmHeader
 #[-8, -3, 21]=>STONE
 
 
@@ -106,7 +107,7 @@ def getFromImage():
 				#argb = int.from_bytes(pix[x, y], byteorder='little', signed=False) # only python 3
 				#d = int(s.encode('hex'), 16)
 				print dir(pix)
-				print pix[x, y]
+				print pix[x, y]  # always 0, wtf?
 				argb = makelongByTup(pix[x, y])
 				print argb
 				exit()
@@ -160,10 +161,58 @@ def getCompressed():
 		#finalStr += "\n"
 	return finalStr
 
+
+
+def readPnm( filename, endian='>' ):
+	fd = open(filename,'rb')
+	fileFormat, width, height, samples, maxval = pnmHeader.read_pnm_header( fd )
+	pixels = numpy.fromfile( fd, dtype='u1' if maxval < 256 else endian+'u2' )
+	#print fileFormat, width, height, samples, maxval, pixels
+	return {"fileFormat":fileFormat, "width":width, "height":height, "samples":samples, "maxval":maxval,
+		"pixels":pixels.reshape(height, width, samples)}
+	
+def getFromPnm():
+	#http://paulbourke.net/dataformats/ppm/
+	finalStr = ""
+
+	countX = 0
+	countY = 0
+	countZ = 0
+	for z in dcmFiles:
+		print z
+		pnm = readPnm(z)
+		width = pnm["width"]
+		height = pnm["height"]
+
+		countX = 0
+		for x in pnm["pixels"]:
+			countY = 0
+			for y in x:
+				#print x,y
+				#pixVal = pnm["pixels"][x][y]
+				pixVal = y
+				print pixVal
+				if pixVal >= minVal and pixVal <= maxVal:
+					material = "GRASS"
+					for i in xrange(materialMatrixL):
+						if pixVal > minVal + materialSwitch * i:
+							material = materialMatrix[i]
+
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ-2, mat=material)
+					#finalStr += str(y) + ","
+				countY += 1
+			countX += 1
+		countZ += 1
+		if countZ > 10:
+			break
+		#finalStr += "\n"
+	return finalStr
+	
+
 #fh = open('testImg', "w")
 #fh.write(getCompressed())
 #fh.close()
 #exit()
 #print finalStr
-sav.write(getFromImage())
+sav.write(getFromPnm())
 sav.close()
