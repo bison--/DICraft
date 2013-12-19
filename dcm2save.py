@@ -83,6 +83,7 @@ def makelongByTup(tup):
 	return n 
 
 def getFromImage():
+	#http://stackoverflow.com/questions/138250/read-the-rgb-value-of-a-given-pixel-in-python-programatically
 	from PIL import Image
 	
 	finalStr = ""
