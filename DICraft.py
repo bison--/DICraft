@@ -744,8 +744,12 @@ class Window(pyglet.window.Window):
 			self.model.remove_block_isle(block)
 		elif symbol == key.F5:
 			self.model.saveModule.saveWorld(self.model)
+		elif symbol == key.F6:
+			self.model.saveModule.exportOpenScad(self.model)
 		elif symbol == key.ESCAPE:
 			self.set_exclusive_mouse(False)
+		elif symbol == key.F1:
+			exit()
 		elif symbol == key.TAB:
 			self.flying = not self.flying
 		elif symbol in self.num_keys:
@@ -886,6 +890,7 @@ def setup():
 
 def main():
 	window = Window(width=800, height=600, caption='DICraft', resizable=True)
+	#window = Window(fullscreen=True, caption='DICraft')
 	window.set_exclusive_mouse(True)
 	setup()
 	pyglet.app.run()

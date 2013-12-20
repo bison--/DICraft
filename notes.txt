@@ -1,0 +1,15 @@
+http://www.paraview.org/
+openscad
+http://www.pythonocc.org/
+
+Python: parsing binary stl file
+http://stackoverflow.com/questions/7566825/python-parsing-binary-stl-file
+
+http://www.ennex.com/~fabbers/StL.asp
+http://de.wikipedia.org/wiki/STL-Schnittstelle
+
+The MakerBot Replicator 2 3D printer supports the following file type(s):
+.obj
+.slc
+.thing
+

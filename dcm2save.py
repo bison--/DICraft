@@ -215,5 +215,5 @@ def getFromPnm():
 #fh.close()
 #exit()
 #print finalStr
-sav.write(getFromPnm())
+sav.write(getUncompressed())
 sav.close()

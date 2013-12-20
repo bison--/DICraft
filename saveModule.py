@@ -54,3 +54,40 @@ class saveModule(object):
         fh.write(worldString)
         fh.close()
         self.printStuff('saving completed')
+        
+    def exportOpenScad(self, model):
+        """
+        openscad
+        translate([x,y,z]) cube(0.2);
+        """
+        
+        self.printStuff('start exporting...')
+        fh = open("openscad.scad", 'w')
+        
+        # build a string to save it in one action
+        worldString = ''
+        
+        cubeCounter = 0
+        for block in model.world:
+            # convert the block coords into json
+            # convert with the translation dictionary the block type into a readable word
+            #worldString += json.dumps(block) + '=>' + self.coordDictSave[ str(model.world[block]) ] + '\n'
+            #render() { cubes }
+            
+            
+            cubeCounter += 1
+            
+            if cubeCounter == 1:
+                worldString += "render() {\n"
+            
+            worldString += "translate(["+ str(block[0]) +","+ str(block[1]+2) +","+ str(block[2]) +"]) cube(1);\n"
+            
+            if cubeCounter >= 100:
+                worldString += "};\n"
+                cubeCounter = 0
+        if cubeCounter < 100:
+            worldString += "};\n"
+            
+        fh.write(worldString)
+        fh.close()
+        self.printStuff('saving completed')
