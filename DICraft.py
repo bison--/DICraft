@@ -20,6 +20,9 @@ SECTOR_SIZE = 512
 # not changeable, yet
 CUBE_SIZE = 0.5
 
+# distance for interaction with cubes
+EDIT_DISTANCE = 42
+
 
 def cube_vertices(x, y, z, n):
 	""" Return the vertices of the cube at position x, y, z with size 2*n.
@@ -684,7 +687,7 @@ class Window(pyglet.window.Window):
 		"""
 		if self.exclusive:
 			vector = self.get_sight_vector()
-			block, previous = self.model.hit_test(self.position, vector)
+			block, previous = self.model.hit_test(self.position, vector, EDIT_DISTANCE)
 			if button == pyglet.window.mouse.LEFT:
 				if block:
 					texture = self.model.world[block]
@@ -740,7 +743,7 @@ class Window(pyglet.window.Window):
 				self.dy = 0.016  # jump speed
 		elif symbol == key.DELETE:
 			vector = self.get_sight_vector()
-			block = self.model.hit_test(self.position, vector)[0]
+			block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
 			self.model.remove_block_isle(block)
 		elif symbol == key.F5:
 			self.model.saveModule.saveWorld(self.model)
@@ -851,12 +854,12 @@ class Window(pyglet.window.Window):
 
 		"""
 		vector = self.get_sight_vector()
-		block = self.model.hit_test(self.position, vector)[0]
+		block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
 		if block:
 			x, y, z = block
 			vertex_data = cube_vertices(x, y, z, CUBE_SIZE + 0.01)
-			glColor3d(0, 0, 0)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+			glColor3d(255, 255, 21)
+			#glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 			pyglet.graphics.draw(24, GL_QUADS, ('v3f/static', vertex_data))
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
