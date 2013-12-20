@@ -480,7 +480,7 @@ class Window(pyglet.window.Window):
 		self.strafe = [0, 0]
 
 		# Current (x, y, z) position in the world, specified with floats.
-		self.position = (0, 0, 0)
+		self.position = (-2, -2, 1)
 
 		# First element is rotation of the player in the x-z plane (ground
 		# plane) measured from the z-axis down. The second is the rotation

@@ -60,7 +60,7 @@ def getUncompressed():
 						if y > minVal + materialSwitch * i:
 							material = materialMatrix[i]
 
-					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=countX, y=countY, z=countZ-2, mat=material)
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=countX, y=countY, z=countZ, mat=material)
 					#finalStr += str(y) + ","
 				countY += 1
 			countX += 1
@@ -118,7 +118,7 @@ def getFromImage():
 						if argb > minVal + materialSwitch * i:
 							material = materialMatrix[i]
 
-					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ-2, mat=material)
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ, mat=material)
 					#finalStr += str(y) + ","
 				countY += 1
 			countX += 1
@@ -199,7 +199,7 @@ def getFromPnm():
 						if pixVal > minVal + materialSwitch * i:
 							material = materialMatrix[i]
 
-					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ-2, mat=material)
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ, mat=material)
 					#finalStr += str(y) + ","
 				countY += 1
 			countX += 1
