@@ -85,7 +85,8 @@ class saveModule(object):
             if cubeCounter >= 100:
                 worldString += "};\n"
                 cubeCounter = 0
-        if cubeCounter < 100:
+                
+        if not worldString.endswith("};\n"):
             worldString += "};\n"
             
         fh.write(worldString)
