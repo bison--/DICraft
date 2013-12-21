@@ -521,6 +521,9 @@ class Window(pyglet.window.Window):
 		# This call schedules the `update()` method to be called 60 times a
 		# second. This is the main game event loop.
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
+		
+		# start in window mode!
+		self.fullScreen = False
 
 	def set_exclusive_mouse(self, exclusive):
 		""" If `exclusive` is True, the game will capture the mouse, if False
@@ -741,6 +744,9 @@ class Window(pyglet.window.Window):
 		elif symbol == key.SPACE:
 			if self.dy == 0:
 				self.dy = 0.016  # jump speed
+		elif symbol == key.F:
+			self.fullScreen = not self.fullScreen
+			self.set_fullscreen(fullscreen = self.fullScreen)
 		elif symbol == key.DELETE:
 			vector = self.get_sight_vector()
 			block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
