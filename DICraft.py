@@ -187,6 +187,7 @@ class Model(object):
 							self.add_block((x, y, z), t, immediate=False)
 					s -= d  # decrement side lenth so hills taper off
 
+
 	def hit_test(self, position, vector, max_distance=8):
 		""" Line of sight search from current position. If a block is
 		intersected it is returned, along with the block previously in the line
@@ -213,6 +214,36 @@ class Model(object):
 			previous = key
 			x, y, z = x + dx / m, y + dy / m, z + dz / m
 		return None, None
+
+	def get_empy_space(self, position, vector, max_distance=8):
+		""" returns the position of an empty space in range
+		return none if there is no empty space
+		
+		Parameters
+		----------
+		position : tuple of len 3
+			The (x, y, z) position to check visibility from.
+		vector : tuple of len 3
+			The line of sight vector.
+		max_distance : int
+			How many blocks away to search for a hit.
+			
+		"""
+		m = 8
+		x, y, z = position
+		dx, dy, dz = vector
+		previous = None
+		
+		rangeCounter = 0
+		for _ in xrange(max_distance * m):
+			rangeCounter += 1
+			if rangeCounter == max_distance * m:
+				key = normalize((x, y, z))
+				if not key in self.world:
+					return key
+			x, y, z = x + dx / m, y + dy / m, z + dz / m
+		return None
+		
 
 	def exposed(self, position):
 		""" Returns False is given `position` is surrounded on all 6 sides by
@@ -622,8 +653,8 @@ class Window(pyglet.window.Window):
 			self.dy = max(self.dy, -0.5)  # terminal velocity
 			dy += self.dy
 		elif self.dy != 0.0:
-			dy += 1
-			self.dy = 0.0
+			dy += self.dy / speed
+				
 		# collisions
 		x, y, z = self.position
 		#x, y, z = self.collide((x + dx, y + dy, z + dz), 2)
@@ -694,11 +725,14 @@ class Window(pyglet.window.Window):
 			if button == pyglet.window.mouse.LEFT:
 				if block:
 					texture = self.model.world[block]
-					#if texture != STONE:
 					self.model.remove_block(block)
 			else:
 				if previous:
 					self.model.add_block(previous, self.block)
+				else:
+					emptySpace = self.model.get_empy_space(self.position, vector)
+					if emptySpace:
+						self.model.add_block(emptySpace, self.block)
 		else:
 			self.set_exclusive_mouse(True)
 
@@ -742,11 +776,11 @@ class Window(pyglet.window.Window):
 		elif symbol == key.D:
 			self.strafe[1] += 1
 		elif symbol == key.SPACE:
-			if self.dy == 0:
-				self.dy = 0.016  # jump speed
-		elif symbol == key.F:
-			self.fullScreen = not self.fullScreen
-			self.set_fullscreen(fullscreen = self.fullScreen)
+			#if self.dy == 0:
+			self.dy = 1.0  # jump speed
+		elif symbol == key.LCTRL:
+			#if self.dy == 0:
+			self.dy = -1.0
 		elif symbol == key.DELETE:
 			vector = self.get_sight_vector()
 			block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
@@ -785,7 +819,16 @@ class Window(pyglet.window.Window):
 			self.strafe[1] += 1
 		elif symbol == key.D:
 			self.strafe[1] -= 1
-
+		elif symbol == key.SPACE:
+			self.dy = 0.0 
+		elif symbol == key.LCTRL:
+			self.dy = 0.0
+		elif symbol == key.F:  # only on release, prevent alltime switch
+			self.fullScreen = not self.fullScreen
+			self.set_fullscreen(fullscreen = self.fullScreen)
+			self.set_exclusive_mouse(False)
+			self.set_exclusive_mouse(True)
+			
 	def on_resize(self, width, height):
 		""" Called when the window is resized to a new `width` and `height`.
 
