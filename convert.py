@@ -1,12 +1,13 @@
 import sys
 import os
 import subprocess
+import dicom
 
-formats = {".png":"+on", ".pgm":"+opw"}
+formats = {".png":"+on", ".pgm":"+opw", ".pnm":"+op"}
 
 dcmFilePath = "./multiImageTest"
 destPath = "./tmp"
-destFormat = ".pgm"
+destFormat = ".pnm"
 dcmFiles = []
 clearTemp = True
 if len(sys.argv) > 1:
@@ -25,6 +26,7 @@ if len(sys.argv) > 1:
 
 	for i in range(len(dcmFilesTmp)):
 		if dcmFilesTmp[i].lower().endswith(".dcm"):
+			#dcm = dicom.load()
 			dcmFiles.append( [os.path.join(dcmFilePath, dcmFilesTmp[i]), dcmFilesTmp[i]])
 	
 	cntCurrentFile = 0

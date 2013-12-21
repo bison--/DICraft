@@ -7,6 +7,15 @@ import pnmHeader
 #[-8, -3, 21]=>STONE
 
 
+def getint(name):
+	#tmp/3DSlice100.dcm.pnm
+	#basename = name.partition('.')
+	#alpha, num = basename.split('_')
+	dirt = name.replace("3DSlice", "").replace(".dcm.pnm", "")
+	if dirt.isdigit():
+		return int(dirt)
+	else:
+		return 0
 	
 sav = open("savegame.sav", "w")
 dcmFilePath = "./multiImageTest"
@@ -14,7 +23,7 @@ dcmFiles = []
 if len(sys.argv) > 1:
 	dcmFilePath = sys.argv[1]
 	dcmFilesTmp = os.listdir(dcmFilePath)
-	dcmFilesTmp.sort()
+	dcmFilesTmp.sort(key=getint)
 	#dcmFiles = sorted(dcmFiles, key=lambda x: int(x.split('.')[3]))
 
 	for i in range(len(dcmFilesTmp)):
@@ -23,15 +32,17 @@ if len(sys.argv) > 1:
 else:
 	dcmFiles.append(os.path.join(dcmFilePath, "CT_small.dcm"))
 
+
+#tiffiles.sort(key=getint)
 #finalStr = ""
 #for x in xrange(10):
 #	for y in xrange(100):
 #		finalStr += "[{x}, {z}, {y}]=>SAND\n".format(x=x, y=y, z=-2)
 
 
-minVal = 400
-maxVal = 1500
-materialSwitch = 250
+minVal = 8 #12850
+maxVal = 30 #13000 #13366
+materialSwitch = 1
 
 import dicom
 
@@ -164,14 +175,84 @@ def getCompressed():
 
 
 
-def readPnm( filename, endian='>' ):
+def readPgm( filename, endian='>' ):
 	fd = open(filename,'rb')
 	fileFormat, width, height, samples, maxval = pnmHeader.read_pnm_header( fd )
 	pixels = numpy.fromfile( fd, dtype='u1' if maxval < 256 else endian+'u2' )
-	#print fileFormat, width, height, samples, maxval, pixels
-	return {"fileFormat":fileFormat, "width":width, "height":height, "samples":samples, "maxval":maxval,
-		"pixels":pixels.reshape(height, width, samples)}
+	#print fileFormat, width, height, samples, maxval, len(pixels), pixels
 	
+	#print dir(pixels)
+	
+	return {"fileFormat":fileFormat, "width":width, "height":height, "samples":samples, "maxval":maxval,
+		"pixels":pixels.tolist()}
+		#"pixels":pixels.reshape(height, width, samples)}  #TODO: learn NUMPY!
+	
+def getFromPgm():
+	#http://paulbourke.net/dataformats/ppm/
+	finalStr = ""
+
+	countX = 0
+	countY = 0
+	countZ = 0
+	countVoxel = 0
+	for z in dcmFiles:
+		z = 'tmp/3DSlice57.dcm.pgm'
+		if countVoxel >= 100000:
+			break
+		print z
+		#z = dcmFiles[1]
+		pnm = readPnm(z)
+		width = pnm["width"]
+		height = pnm["height"]
+
+		countX = 0
+		for x in xrange(width):#pnm["pixels"]:
+			countY = 0
+			for y in xrange(height):#x:
+				#print x,y
+				#pixVal = pnm["pixels"][x][y]
+				#pixVal = y
+				index = (countX * width) + y
+				if index >= len(pnm["pixels"]):
+					print index, len(pnm["pixels"])
+					break
+					
+				pixVal = pnm["pixels"][index]
+				#print pixVal
+				if pixVal >= minVal and pixVal <= maxVal:
+					material = "GRASS"
+					for i in xrange(materialMatrixL):
+						if pixVal > minVal + materialSwitch * i:
+							material = materialMatrix[i]
+					
+					countVoxel += 1
+					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ, mat=material)
+				else:
+					pass
+					#print "lost:", x,y,z,':', pixVal
+					#finalStr += str(y) + ","
+				countY += 1
+			countX += 1
+		countZ += 1
+		#if countZ > 10:
+		#	break
+		#finalStr += "\n"
+		break
+	return finalStr
+
+def readPnm( filename ):
+	fd = open(filename,'rb')
+	fileFormat, width, height, samples, maxval = pnmHeader.read_pnm_header( fd )
+	pixels = numpy.fromfile( fd, dtype='u1' if maxval < 256 else endian+'u2' )
+	#print fileFormat, width, height, samples, maxval, len(pixels), pixels
+	
+	#print dir(pixels)
+	
+	return {"fileFormat":fileFormat, "width":width, "height":height, "samples":samples, "maxval":maxval,
+		"pixels":pixels.tolist()}
+		#"pixels":pixels.reshape(height, width, samples)}  #TODO: learn NUMPY!
+	
+
 def getFromPnm():
 	#http://paulbourke.net/dataformats/ppm/
 	finalStr = ""
@@ -179,41 +260,56 @@ def getFromPnm():
 	countX = 0
 	countY = 0
 	countZ = 0
+	countVoxel = 0
 	for z in dcmFiles:
+		#if countVoxel >= 200000:
+		#	break
 		print z
+		#z = dcmFiles[1]
 		pnm = readPnm(z)
 		width = pnm["width"]
 		height = pnm["height"]
 
 		countX = 0
-		for x in pnm["pixels"]:
+		for x in xrange(width):#pnm["pixels"]:
 			countY = 0
-			for y in x:
+			for y in xrange(height):#x:
 				#print x,y
 				#pixVal = pnm["pixels"][x][y]
-				pixVal = y
-				print pixVal
+				#pixVal = y
+				index = (countX * width) + y
+				if index >= len(pnm["pixels"]):
+					print countX, index, len(pnm["pixels"])
+					break
+					
+				pixVal = pnm["pixels"][index]
+				#print pixVal
 				if pixVal >= minVal and pixVal <= maxVal:
 					material = "GRASS"
 					for i in xrange(materialMatrixL):
 						if pixVal > minVal + materialSwitch * i:
 							material = materialMatrix[i]
-
+					
+					countVoxel += 1
 					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ, mat=material)
+					#print "added:", x,y,z,':', pixVal
+				else:
+					pass
+					#print "lost:", x,y,z,':', pixVal
 					#finalStr += str(y) + ","
 				countY += 1
 			countX += 1
 		countZ += 1
-		if countZ > 10:
-			break
+		#if countZ > 10:
+		#	break
 		#finalStr += "\n"
+		
 	return finalStr
 	
-
 #fh = open('testImg', "w")
 #fh.write(getCompressed())
 #fh.close()
 #exit()
 #print finalStr
-sav.write(getUncompressed())
+sav.write(getFromPnm())
 sav.close()
