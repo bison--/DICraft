@@ -34,7 +34,7 @@ This will convert **ALL** .dcm files under the given directory into the **tmp** 
 
     python convert.py multiImageTest/
     
-With this command we create a *"voxel"* file our engine can work with.
+With this command we create a *"voxel"* file our engine can work with.  
 This command will automatically overwrtite **"saves/quicksave.sav"**, with the command switch "savefile="  
 you can name the destination file.
 
@@ -45,6 +45,7 @@ Finally we can start the main program (if you named your file, you have to tell 
     python DICraft.py savefile=roflcopter.sav
 
 From here you can save your work with F5 or export it for 3D-Printing with F6
+
 
 # Controls
 
