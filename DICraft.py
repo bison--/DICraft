@@ -14,7 +14,7 @@ import sys
 sys.setrecursionlimit(64000)
 
 # Size of sectors used to ease block loading.
-SECTOR_SIZE = 512
+SECTOR_SIZE = 150
 
 # default cube size is 0.5
 # not changeable, yet
@@ -38,9 +38,11 @@ def cube_vertices(x, y, z, n):
 	]
 
 
-def tex_coord(x, y, n=4):
+def tex_coord(x, y, n=200):
 	""" Return the bounding vertices of the texture square.
-
+	
+	Parameters:
+	n : the NUMBER of texture elements on the X/WITH axis of the image
 	"""
 	m = 1.0 / n
 	dx = x * m
@@ -61,13 +63,33 @@ def tex_coords(top, bottom, side):
 	result.extend(side * 4)
 	return result
 
+def tex_coords_simple(xCoord):
+	""" Return a list of the texture squares for the top, bottom and side.
+
+	"""
+	allSides = (xCoord, 0)
+	
+	top = tex_coord(*allSides)
+	bottom = tex_coord(*allSides)
+	side = tex_coord(*allSides)
+	result = []
+	result.extend(top)
+	result.extend(bottom)
+	result.extend(side * 4)
+	return result
 
 TEXTURE_PATH = 'texture.png'
 
-GRASS = tex_coords((1, 0), (0, 1), (0, 0))
-SAND = tex_coords((1, 1), (1, 1), (1, 1))
-BRICK = tex_coords((2, 0), (2, 0), (2, 0))
-STONE = tex_coords((2, 1), (2, 1), (2, 1))
+#GRASS = tex_coords((1, 0), (0, 1), (0, 0))
+#SAND = tex_coords((1, 1), (1, 1), (1, 1))
+#BRICK = tex_coords((2, 0), (2, 0), (2, 0))
+#STONE = tex_coords((2, 1), (2, 1), (2, 1))
+
+MATERIALS = []
+for i in xrange(100):
+	MATERIALS.append(tex_coords_simple(i))
+
+
 
 FACES = [
 	( 0, 1, 0),
@@ -154,6 +176,15 @@ class Model(object):
 		if self.saveModule.hasSaveGame() == True:
 			self.saveModule.loadWorld(self)
 		else:
+			for x in xrange(len(MATERIALS)):
+				self.add_block((x, 0, 0), MATERIALS[x], immediate=False)
+				
+			for z in xrange(len(MATERIALS)):
+				self.add_block((0, z, 1), MATERIALS[z], immediate=False)
+				
+			for y in xrange(len(MATERIALS)):
+				self.add_block((0, 2, y), MATERIALS[y], immediate=False)
+			'''
 			n = 80  # 1/2 width and height of world
 			s = 1  # step size
 			y = 0  # initial y height
@@ -185,7 +216,7 @@ class Model(object):
 							if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
 								continue
 							self.add_block((x, y, z), t, immediate=False)
-					s -= d  # decrement side lenth so hills taper off
+					s -= d  # decrement side lenth so hills taper off'''
 
 
 	def hit_test(self, position, vector, max_distance=8):
@@ -531,7 +562,11 @@ class Window(pyglet.window.Window):
 		self.dy = 0
 
 		# A list of blocks the player can place. Hit num keys to cycle.
-		self.inventory = [BRICK, GRASS, SAND]
+		#self.inventory = [BRICK, GRASS, SAND]
+		self.inventory = []
+		for i in range(0, len(MATERIALS), 10):
+			#print "inventory:",i, MATERIALS[i]
+			self.inventory.append(MATERIALS[i])
 
 		# The current block the user can place. Hit num keys to cycle.
 		self.block = self.inventory[0]
@@ -790,13 +825,14 @@ class Window(pyglet.window.Window):
 		elif symbol == key.F6:
 			self.model.saveModule.exportOpenScad(self.model)
 		elif symbol == key.ESCAPE:
-			self.set_exclusive_mouse(False)
-		elif symbol == key.F1:
 			exit()
+		elif symbol == key.F1:
+			self.set_exclusive_mouse(False)
 		elif symbol == key.TAB:
 			self.flying = not self.flying
 		elif symbol in self.num_keys:
 			index = (symbol - self.num_keys[0]) % len(self.inventory)
+			print index
 			self.block = self.inventory[index]
 
 	def on_key_release(self, symbol, modifiers):
@@ -930,6 +966,11 @@ class Window(pyglet.window.Window):
 		self.reticle.draw(GL_LINES)
 
 
+
+def log(txt):
+	print(time.strftime("%d-%m-%Y %H:%M:%S|", time.gmtime()) + str(txt) ) 
+
+
 def setup():
 	""" Basic OpenGL configuration.
 
@@ -943,7 +984,7 @@ def setup():
 def main():
 	window = Window(width=800, height=600, caption='DICraft', resizable=True)
 	#window = Window(fullscreen=True, caption='DICraft')
-	window.set_exclusive_mouse(True)
+	#window.set_exclusive_mouse(True)
 	setup()
 	pyglet.app.run()
 

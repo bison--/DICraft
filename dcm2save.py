@@ -8,6 +8,7 @@ import pnmHeader
 
 
 def getint(name):
+	#TODO: make a USEFUL sort algorythm!
 	#tmp/3DSlice100.dcm.pnm
 	#basename = name.partition('.')
 	#alpha, num = basename.split('_')
@@ -17,20 +18,19 @@ def getint(name):
 	else:
 		return 0
 	
-sav = open("savegame.sav", "w")
-dcmFilePath = "./multiImageTest"
-dcmFiles = []
+sav = open("saves/quicksave.sav", "w")
+sourceFolder = "./tmp"
+sourceFiles = []
 if len(sys.argv) > 1:
-	dcmFilePath = sys.argv[1]
-	dcmFilesTmp = os.listdir(dcmFilePath)
-	dcmFilesTmp.sort(key=getint)
-	#dcmFiles = sorted(dcmFiles, key=lambda x: int(x.split('.')[3]))
+	sourceFolder = sys.argv[1]
 
-	for i in range(len(dcmFilesTmp)):
-		if not dcmFilesTmp[i].lower().endswith(".md"):
-			dcmFiles.append(os.path.join(dcmFilePath, dcmFilesTmp[i]))
-else:
-	dcmFiles.append(os.path.join(dcmFilePath, "CT_small.dcm"))
+sourceFilesTmp = os.listdir(sourceFolder)
+sourceFilesTmp.sort(key=getint)
+#sourceFiles = sorted(sourceFiles, key=lambda x: int(x.split('.')[3]))
+
+for i in range(len(sourceFilesTmp)):
+	if not sourceFilesTmp[i].lower().endswith(".md"):
+		sourceFiles.append(os.path.join(sourceFolder, sourceFilesTmp[i]))
 
 
 #tiffiles.sort(key=getint)
@@ -40,15 +40,40 @@ else:
 #		finalStr += "[{x}, {z}, {y}]=>SAND\n".format(x=x, y=y, z=-2)
 
 
-minVal = 8 #12850
-maxVal = 30 #13000 #13366
-materialSwitch = 1
+minVal = 130 #7 #12850
+maxVal = 134 #30 #13000 #13366
+materialSwitch = 15
 
 import dicom
 
 
-materialMatrix = ["GRASS", "SAND", "BRICK", "STONE"]
-materialMatrixL = len(materialMatrix)
+#materialMatrix = ["GRASS", "SAND", "BRICK", "STONE"]
+materialMatrixL = 99 #len(materialMatrix)
+
+
+class statistics(object):
+	def __init__(self):
+		self.minValue = -1
+		self.maxValue = 0
+		self.totalValues = 0
+		self.totalAcceptedValues = 0
+	
+	def addVal(self, val, isAccepted=False):
+		self.totalValues += 1
+		if isAccepted:
+			self.totalAcceptedValues += 1
+		
+		if val > self.maxValue:
+			self.maxValue = val
+		elif val < self.minValue or self.minValue == -1:
+			self.minValue = val
+			
+	def printStats(self):
+		print "minValue:", self.minValue
+		print "maxValue:", self.maxValue
+		print "accepted values:", self.totalAcceptedValues, "/", self.totalValues
+
+STATS = statistics()
 
 def getUncompressed():
 	finalStr = ""
@@ -56,7 +81,7 @@ def getUncompressed():
 	countX = 0
 	countY = 0
 	countZ = 0
-	for z in dcmFiles:
+	for z in sourceFiles:
 		print z
 		ds = dicom.read_file(z)
 
@@ -66,10 +91,10 @@ def getUncompressed():
 			countY = 0
 			for y in x:
 				if y >= minVal and y <= maxVal:
-					material = "GRASS"
+					material = 0
 					for i in xrange(materialMatrixL):
 						if y > minVal + materialSwitch * i:
-							material = materialMatrix[i]
+							material = i
 
 					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=countX, y=countY, z=countZ, mat=material)
 					#finalStr += str(y) + ","
@@ -102,7 +127,7 @@ def getFromImage():
 	countX = 0
 	countY = 0
 	countZ = 0
-	for z in dcmFiles:
+	for z in sourceFiles:
 		print z
 		im = Image.open(z) #Can be many different formats.
 		pix = im.load()
@@ -146,7 +171,7 @@ def getCompressed():
 	countX = 0
 	countY = 0
 	countZ = 0
-	for z in dcmFiles:
+	for z in sourceFiles:
 		print z
 		ds = dicom.read_file(z)
 		pixel_bytes = ds.PixelData
@@ -195,12 +220,12 @@ def getFromPgm():
 	countY = 0
 	countZ = 0
 	countVoxel = 0
-	for z in dcmFiles:
+	for z in sourceFiles:
 		z = 'tmp/3DSlice57.dcm.pgm'
 		if countVoxel >= 100000:
 			break
 		print z
-		#z = dcmFiles[1]
+		#z = sourceFiles[1]
 		pnm = readPnm(z)
 		width = pnm["width"]
 		height = pnm["height"]
@@ -261,11 +286,11 @@ def getFromPnm():
 	countY = 0
 	countZ = 0
 	countVoxel = 0
-	for z in dcmFiles:
+	for z in sourceFiles:
 		#if countVoxel >= 200000:
 		#	break
 		print z
-		#z = dcmFiles[1]
+		#z = sourceFiles[1]
 		pnm = readPnm(z)
 		width = pnm["width"]
 		height = pnm["height"]
@@ -279,22 +304,29 @@ def getFromPnm():
 				#pixVal = y
 				index = (countX * width) + y
 				if index >= len(pnm["pixels"]):
-					print countX, index, len(pnm["pixels"])
+					#print countX, index, len(pnm["pixels"])
 					break
 					
 				pixVal = pnm["pixels"][index]
 				#print pixVal
 				if pixVal >= minVal and pixVal <= maxVal:
-					material = "GRASS"
-					for i in xrange(materialMatrixL):
-						if pixVal > minVal + materialSwitch * i:
-							material = materialMatrix[i]
+					STATS.addVal(pixVal, True)
+					material = (pixVal - minVal) * materialSwitch
+					
+					if material > materialMatrixL:
+						print "over value:", pixVal, "/", material
+						material = materialMatrixL
+					elif material < materialSwitch:
+						material = pixVal - minVal
+					#for i in xrange(materialMatrixL):
+					#	if pixVal >= minVal + materialSwitch * i:
+					#		material = i
 					
 					countVoxel += 1
-					finalStr += "[{y}, {z}, {x}]=>{mat}\n".format(x=x, y=y, z=countZ, mat=material)
+					finalStr += "[{y}, {z}, {x}]:{mat}\n".format(x=x, y=y, z=countZ, mat=material)
 					#print "added:", x,y,z,':', pixVal
 				else:
-					pass
+					STATS.addVal(pixVal, False)
 					#print "lost:", x,y,z,':', pixVal
 					#finalStr += str(y) + ","
 				countY += 1
@@ -313,3 +345,4 @@ def getFromPnm():
 #print finalStr
 sav.write(getFromPnm())
 sav.close()
+STATS.printStats()
