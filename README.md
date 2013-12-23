@@ -29,13 +29,13 @@ you need **dcmj2pnm** what is part of the dcmtk
 
 # USE
 
-At first, we have to convert some **DCM** files into an readable format.
+At first, we have to convert some **DCM** files into an readable format.  
 This will convert **ALL** .dcm files under the given directory into the **tmp** directory.
 
     python convert.py multiImageTest/
     
 With this command we create a *"voxel"* file our engine can work with.  
-This command will automatically overwrtite **"saves/quicksave.sav"**, with the command switch "savefile="  
+This command will automatically overwrtite **"saves/quicksave.sav"** or with the command switch "savefile="  
 you can name the destination file.
 
     python dcm2save.py tmp/ savefile=roflcopter.sav
@@ -46,6 +46,18 @@ Finally we can start the main program (if you named your file, you have to tell 
 
 From here you can save your work with F5 or export it for 3D-Printing with F6
 
+## Configuration
+
+In **dcm2save.py** are 3 special configuraton variables:  
+    minVal = 130
+    maxVal = 134
+    materialSwitch = 15
+**minVal** and **maxVal** are the raw gray values from the image, every value in between would be displayed later.  
+You **HAVE** to play with those values to get an accurate result (later there will be a GUI for that....).  
+
+**materialSwitch** is in which intervals another Texture is picked.  
+You may have to play with it too.  
+The maximum value is 99.
 
 # Controls
 
@@ -53,7 +65,7 @@ Exit: ESC
 Release mouse: F1
 
 Save your work: F5  
-Export to OpenScad: F6 
+Export to OpenScad: F6
 
 Movement: W A S D, UP(SPACE), DOWN(LEFT CTRL)  
 Remove block: left mouse button  
