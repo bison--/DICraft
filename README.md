@@ -6,9 +6,11 @@ Convert DICOM files into voxel/pixelcloud and edit in Minecraft style.
 # Installation
 
 Debian based:
+
     sudo apt-get install python-pyglet
 
 Others "maybe":
+
     sudo pip install pyglet
 
 
