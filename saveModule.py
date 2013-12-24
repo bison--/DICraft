@@ -3,14 +3,10 @@ import json
 import os
 import sys
 from time import gmtime, strftime
-
+import stlWriter
+		
 class saveModule(object):
-	def __init__(self):
-		# "tarnslate" the block texture tuples into readable words for saving
-		#self.coordDictSave = { str(main.GRASS):'GRASS', str(main.SAND):'SAND', str(main.BRICK):'BRICK', str(main.STONE):'STONE' }	  
-		# "tarnslate" the words back into tuples for loading
-		#self.coordDictLoad = { 'GRASS':main.GRASS, 'SAND':main.SAND, 'BRICK':main.BRICK, 'STONE':main.STONE }
-				
+	def __init__(self):		
 		self.saveFile = 'quicksave.sav'
 		self.saveFolder =  "saves"
 		if len(sys.argv) > 1:
@@ -29,7 +25,7 @@ class saveModule(object):
 	def getSaveDest(self):
 		return os.path.join(self.saveFolder, self.saveFile)
 	
-	def hasSaveGame(self):
+	def hasSaveFile(self):
 		if os.path.exists(self.getSaveDest()):
 			return True
 		else:
@@ -48,7 +44,6 @@ class saveModule(object):
 		linesTotal = len(worldMod)
 		for blockLine in worldMod:
 			lineCounter += 1
-			lineCounterTotal += 1
 					
 			# remove the last empty line
 			if blockLine != '':
@@ -63,6 +58,7 @@ class saveModule(object):
 				model.add_block( tuple(json.loads(coords)), main.MATERIALS[blockType], False )
 			
 			if lineCounter > 1000:
+				lineCounterTotal += lineCounter
 				lineCounter = 0
 				self.printStuff(str(lineCounterTotal) + "/" + str(linesTotal))
 				
@@ -88,14 +84,59 @@ class saveModule(object):
 		fh.write(worldString)
 		fh.close()
 		self.printStuff('saving completed')
+
+	def exportStl(self, model):
+		self.printStuff('start export stl...')
+		fh = open(self.getSaveDest() + '.stl', 'wb')
+		#writer = Binary_STL_Writer(fp)
+		writer = stlWriter.Binary_STL_Writer(fh)
 		
+		lineCounter = 0
+		lineCounterTotal = 0
+		linesTotal = len(model.shown)
+		for block in model.shown:
+			lineCounter += 1
+			writer.add_faces(self.getCubeFaces(block[0],block[1],block[2]))
+
+			if lineCounter > 1000:
+				lineCounterTotal += lineCounter
+				lineCounter = 0
+				self.printStuff(str(lineCounterTotal) + "/" + str(linesTotal))
+
+		writer.close()
+		self.printStuff('export stl completed')
+
+	def getCubeFaces(self, x=0,y=0,z=0):
+		# cube size
+		s = 1.0
+		# cube corner points
+		p1 = (0+x, 0+y, 0+z)
+		p2 = (0+x, 0+y, s+z)
+		p3 = (0+x, s+y, 0+z)
+		p4 = (0+x, s+y, s+z)
+		p5 = (s+x, 0+y, 0+z)
+		p6 = (s+x, 0+y, s+z)
+		p7 = (s+x, s+y, 0+z)
+		p8 = (s+x, s+y, s+z)
+
+		# define the 6 cube faces
+		# faces just lists of 3 or 4 vertices
+		return [
+			[p1, p5, p7, p3],
+			[p1, p5, p6, p2],
+			[p5, p7, p8, p6],
+			[p7, p8, p4, p3],
+			[p1, p3, p4, p2],
+			[p2, p6, p8, p4],
+		]
+
 	def exportOpenScad(self, model):
 		"""
 		openscad
 		translate([x,y,z]) cube(0.2);
 		"""
 		
-		self.printStuff('start export...')
+		self.printStuff('start scad export...')
 		fh = open(self.getSaveDest() + ".scad", 'w')
 		
 		# build a string to save it in one action
@@ -121,4 +162,4 @@ class saveModule(object):
 			
 		fh.write(worldString)
 		fh.close()
-		self.printStuff('export completed')
+		self.printStuff('export scad completed')
