@@ -49,9 +49,11 @@ From here you can save your work with F5 or export it for 3D-Printing with F6
 ## Configuration
 
 In **dcm2save.py** are 3 special configuraton variables:  
+
     minVal = 130
     maxVal = 134
     materialSwitch = 15
+
 **minVal** and **maxVal** are the raw gray values from the image, every value in between would be displayed later.  
 You **HAVE** to play with those values to get an accurate result (later there will be a GUI for that....).  
 
