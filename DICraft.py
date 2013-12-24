@@ -474,7 +474,7 @@ class Model(object):
 		contiguous x, y sub-region of world. Sectors are used to speed up
 		world rendering.
 
-		"""
+		"""	
 		before_set = set()
 		after_set = set()
 		pad = 4
@@ -944,8 +944,10 @@ class Window(pyglet.window.Window):
 			x, y, z = block
 			vertex_data = cube_vertices(x, y, z, CUBE_SIZE + 0.01)
 			glColor3d(255, 255, 21)
-			#glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+			# white focus
 			pyglet.graphics.draw(24, GL_QUADS, ('v3f/static', vertex_data))
+			# borderlines
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
 	def draw_label(self):

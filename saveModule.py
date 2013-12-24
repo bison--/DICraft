@@ -17,7 +17,12 @@ class saveModule(object):
 			for arg in sys.argv:
 				if arg.startswith("savefile="):
 					self.saveFile = arg.replace("savefile=", "")
-				
+		
+		self.printStuff("working with file: " + self.getSaveDest())
+		
+		# max voxels to load
+		self.maxVoxels = 10000000
+		
 	def printStuff(self, txt):
 		print(strftime("%d-%m-%Y %H:%M:%S|", gmtime()) + str(txt) ) 
 	
@@ -38,7 +43,13 @@ class saveModule(object):
 		
 		worldMod = worldMod.split('\n')
 		
+		lineCounter = 0
+		lineCounterTotal = 0
+		linesTotal = len(worldMod)
 		for blockLine in worldMod:
+			lineCounter += 1
+			lineCounterTotal += 1
+					
 			# remove the last empty line
 			if blockLine != '':
 				coords, blockType = blockLine.split(':')
@@ -50,7 +61,16 @@ class saveModule(object):
 				#print main.MATERIALS[blockType]
 				# convert the json list into tuple; json ONLY get lists but we need tuples
 				model.add_block( tuple(json.loads(coords)), main.MATERIALS[blockType], False )
-		
+			
+			if lineCounter > 1000:
+				lineCounter = 0
+				self.printStuff(str(lineCounterTotal) + "/" + str(linesTotal))
+				
+				# just in case you dont want to exhaust memory!
+			if lineCounterTotal >= self.maxVoxels:
+				break
+			
+		self.printStuff("loaded " + str(lineCounterTotal) + " blocks")
 		self.printStuff('loading completed')
 		
 	def saveWorld(self, model):
@@ -83,9 +103,6 @@ class saveModule(object):
 		
 		cubeCounter = 0
 		for block in model.world:
-			# convert the block coords into json
-			# convert with the translation dictionary the block type into a readable word
-			#worldString += json.dumps(block) + '=>' + self.coordDictSave[ str(model.world[block]) ] + '\n'
 			#render() { cubes }
 			
 			cubeCounter += 1
@@ -93,7 +110,7 @@ class saveModule(object):
 			if cubeCounter == 1:
 				worldString += "render() {\n"
 			
-			worldString += "translate(["+ str(block[0]) +","+ str(block[1]+2) +","+ str(block[2]) +"]) cube(1);\n"
+			worldString += "translate([{0},{1},{2}]) cube(1);\n".format(block[0], block[1], block[2])
 			
 			if cubeCounter >= 100:
 				worldString += "};\n"
@@ -104,4 +121,4 @@ class saveModule(object):
 			
 		fh.write(worldString)
 		fh.close()
-		self.printStuff('export complete')
+		self.printStuff('export completed')

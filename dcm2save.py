@@ -4,6 +4,7 @@
 import sys, os
 import numpy
 import pnmHeader
+import saveModule
 #[-8, -3, 21]=>STONE
 
 
@@ -17,8 +18,11 @@ def getint(name):
 		return int(dirt)
 	else:
 		return 0
-	
-sav = open("saves/quicksave.sav", "w")
+
+
+sm = saveModule.saveModule()
+sav = open(sm.getSaveDest(), "w")
+
 sourceFolder = "./tmp"
 sourceFiles = []
 if len(sys.argv) > 1:
@@ -40,8 +44,8 @@ for i in range(len(sourceFilesTmp)):
 #		finalStr += "[{x}, {z}, {y}]=>SAND\n".format(x=x, y=y, z=-2)
 
 
-minVal = 130 #7 #12850
-maxVal = 134 #30 #13000 #13366
+minVal = 7 #130 #7 #12850
+maxVal = 30 #134 #30 #13000 #13366
 materialSwitch = 15
 
 import dicom
