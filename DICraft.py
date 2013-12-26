@@ -9,6 +9,7 @@ from pyglet.graphics import TextureGroup
 from pyglet.window import key
 
 import saveModule
+import multiTimer
 import sys
 
 sys.setrecursionlimit(64000)
@@ -165,6 +166,9 @@ class Model(object):
 		
 		# a module to save and load the world
 		self.saveModule = saveModule.saveModule()
+		
+		# notifications to display
+		self.notification = ""
 
 		self._initialize()
 
@@ -550,12 +554,30 @@ class Window(pyglet.window.Window):
 			x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
 			color=(0, 0, 0, 255))
 
+		# fix label while rendering the world
+		self.loabel = pyglet.text.Label("!RENDERING WORLD, STAY TUNED!", font_name='Arial', font_size=16,
+			x=self.width / 2, y=self.height / 2 , anchor_x='center', anchor_y='top',
+			color=(0, 0, 0, 255))
+			
+		# fix label while rendering the world
+		self.labelNotify = pyglet.text.Label("", font_name='Arial', font_size=16,
+			x=self.width / 2, y=self.height / 2 , anchor_x='center', anchor_y='top',
+			color=(0, 0, 0, 255))
+
 		# This call schedules the `update()` method to be called 60 times a
 		# second. This is the main game event loop.
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 		
 		# start in window mode!
 		self.fullScreen = False
+		
+		# a master timer for all the timers!
+		self.mt = multiTimer.multiTimer()
+		
+		# add timer and bool for the initial loading text while rendereing the world
+		# for the first time
+		self.renderWorld = True
+		self.mt.start("renderWorld")
 
 	def set_exclusive_mouse(self, exclusive):
 		""" If `exclusive` is True, the game will capture the mouse, if False
@@ -926,6 +948,17 @@ class Window(pyglet.window.Window):
 			pyglet.clock.get_fps(), x, y, z,
 			len(self.model._shown), len(self.model.world))
 		self.label.draw()
+		
+		if self.renderWorld:
+			self.loabel.draw()
+			if self.mt.duration("renderWorld") >= 1.5:
+				self.mt.stop("renderWorld")
+				self.renderWorld = False
+		
+		#TODO: draw some notifications from self.model! 
+		if self.model.notification:
+			self.labelNotify.text = self.model.notification
+			
 
 	def draw_reticle(self):
 		""" Draw the crosshairs in the center of the screen.
