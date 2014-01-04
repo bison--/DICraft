@@ -9,7 +9,7 @@ from pyglet.graphics import TextureGroup
 from pyglet.window import key
 
 
-import blockwork
+import blockWork
 import saveModule
 import multiTimer
 import sys
@@ -182,6 +182,8 @@ class Model(object):
 		if self.saveModule.hasSaveFile() == True:
 			self.saveModule.loadWorld(self)
 		else:
+			print "no savefile, generating sample"
+			
 			for x in xrange(len(MATERIALS)):
 				self.add_block((x, 0, 0), MATERIALS[x], immediate=False)
 				
@@ -190,7 +192,7 @@ class Model(object):
 				
 			for y in xrange(len(MATERIALS)):
 				self.add_block((0, 2, y), MATERIALS[y], immediate=False)
-
+		
 	def hit_test(self, position, vector, max_distance=8):
 		""" Line of sight search from current position. If a block is
 		intersected it is returned, along with the block previously in the line
@@ -512,7 +514,7 @@ class Window(pyglet.window.Window):
 		self.model = Model()
 		
 		# Instance of world modificator "blockwork"
-		self.blockwork = blockwork.blockwork(self.model)
+		self.blockWork = blockWork.blockWork(self.model)
 
 		# The label that is displayed in the top left of the canvas.
 		self.label = pyglet.text.Label('', font_name='Arial', font_size=16,
@@ -538,6 +540,9 @@ class Window(pyglet.window.Window):
 		
 		# a master timer for all the timers!
 		self.mt = multiTimer.multiTimer()
+		
+		# collect volumes
+		self.blockWork.getVolumes()
 		
 		# add timer and bool for the initial loading text while rendereing the world
 		# for the first time
@@ -772,7 +777,7 @@ class Window(pyglet.window.Window):
 		elif symbol == key.DELETE:
 			vector = self.get_sight_vector()
 			block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
-			self.blockwork.removeBlockIsle(block)
+			self.blockWork.removeBlockIsle(block)
 		elif symbol == key.F5:
 			self.model.saveModule.saveWorld(self.model)
 		elif symbol == key.F6:

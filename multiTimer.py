@@ -40,7 +40,7 @@ class timerObj(object):
 	
 	def reset(self):
 		self.startTime = time.time()
-		self.stopTime = time.time()
+		self.stopTime = 0.0
 	
 	def stop(self):
 		self.stopTime = time.time()
