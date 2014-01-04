@@ -331,6 +331,10 @@ class Window(pyglet.window.Window):
 		elif symbol == key.LCTRL:
 			#if self.dy == 0:
 			self.dy = -1.0
+		elif symbol == key.R:
+			# reset position in case of getting "lost"
+			self.position = (-2, -2, 1)
+			self.rotation = (100, 0)
 		elif symbol == key.DELETE:
 			vector = self.get_sight_vector()
 			block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]

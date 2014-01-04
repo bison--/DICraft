@@ -72,12 +72,13 @@ Export to OpenScad: F6
 Movement: W A S D, UP(SPACE), DOWN(LEFT CTRL)  
 Remove block: left mouse button  
 Place block: right mouse button  
-Select "material": number 1 to 0
+Select "material": number 1 to 0  
+Reset position (in case of getting "lost"): R
 
 Remove group of blocks:  
 focus a block, press **"DEL"** and all blocks that stick together are removed  
 **WARNING**  
-There is a recursion bug that can crash the program if there are TO MANY blocks!  
+This may take "forever", be careful!
 **USE WITH CARE** 
 
 
