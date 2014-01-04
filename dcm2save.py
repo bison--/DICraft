@@ -1,19 +1,30 @@
 #!/usr/bin/python
 
-
 import sys, os
 import numpy
+import dicom
 import pnmHeader
 import saveModule
+import multiTimer
 #[-8, -3, 21]=>STONE
 
 
-def getint(name):
+minVal = 10 #130 #7 #12850
+maxVal = 57 #134 #30 #13000 #13366
+materialSwitch = 15
+
+#materialMatrix = ["GRASS", "SAND", "BRICK", "STONE"]
+materialMatrixL = 99 #len(materialMatrix)
+
+
+def getInt(name):
 	#TODO: make a USEFUL sort algorythm!
 	#tmp/3DSlice100.dcm.pnm
 	#basename = name.partition('.')
 	#alpha, num = basename.split('_')
-	dirt = name.replace("3DSlice", "").replace(".dcm.pnm", "")
+	parts = name.split(".")
+	dirt = parts[0].replace("3DSlice", "")
+	#dirt = name.replace("3DSlice", "").replace(".dcm.pgm", "")
 	if dirt.isdigit():
 		return int(dirt)
 	else:
@@ -29,7 +40,7 @@ if len(sys.argv) > 1:
 	sourceFolder = sys.argv[1]
 
 sourceFilesTmp = os.listdir(sourceFolder)
-sourceFilesTmp.sort(key=getint)
+sourceFilesTmp.sort(key=getInt)
 #sourceFiles = sorted(sourceFiles, key=lambda x: int(x.split('.')[3]))
 
 for i in range(len(sourceFilesTmp)):
@@ -44,19 +55,10 @@ for i in range(len(sourceFilesTmp)):
 #		finalStr += "[{x}, {z}, {y}]=>SAND\n".format(x=x, y=y, z=-2)
 
 
-minVal = 7 #130 #7 #12850
-maxVal = 30 #134 #30 #13000 #13366
-materialSwitch = 15
-
-import dicom
-
-
-#materialMatrix = ["GRASS", "SAND", "BRICK", "STONE"]
-materialMatrixL = 99 #len(materialMatrix)
-
-
 class statistics(object):
 	def __init__(self):
+		self.mt = multiTimer.multiTimer()
+		self.mt.start("runtime")
 		self.minValue = -1
 		self.maxValue = 0
 		self.totalValues = 0
@@ -73,6 +75,8 @@ class statistics(object):
 			self.minValue = val
 			
 	def printStats(self):
+		self.mt.stop("runtime")
+		print "duration:", self.mt.duration("runtime")
 		print "minValue:", self.minValue
 		print "maxValue:", self.maxValue
 		print "accepted values:", self.totalAcceptedValues, "/", self.totalValues
@@ -271,6 +275,7 @@ def getFromPgm():
 
 def readPnm( filename ):
 	fd = open(filename,'rb')
+	endian = '>'
 	fileFormat, width, height, samples, maxval = pnmHeader.read_pnm_header( fd )
 	pixels = numpy.fromfile( fd, dtype='u1' if maxval < 256 else endian+'u2' )
 	#print fileFormat, width, height, samples, maxval, len(pixels), pixels
@@ -318,7 +323,7 @@ def getFromPnm():
 					material = (pixVal - minVal) * materialSwitch
 					
 					if material > materialMatrixL:
-						print "over value:", pixVal, "/", material
+						#print "over value:", pixVal, "/", material
 						material = materialMatrixL
 					elif material < materialSwitch:
 						material = pixVal - minVal
@@ -336,6 +341,7 @@ def getFromPnm():
 				countY += 1
 			countX += 1
 		countZ += 1
+		print "current voxel:", countVoxel
 		#if countZ > 10:
 		#	break
 		#finalStr += "\n"

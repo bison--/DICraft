@@ -15,6 +15,9 @@ class saveModule(object):
 					self.saveFile = arg.replace("savefile=", "")
 		
 		self.printStuff("working with file: " + self.getSaveDest())
+				
+		# console output after X lines
+		self.maxLineCounter = 10000
 		
 		# max voxels to load
 		self.maxVoxels = 10000000
@@ -57,7 +60,7 @@ class saveModule(object):
 				# convert the json list into tuple; json ONLY get lists but we need tuples
 				model.add_block( tuple(json.loads(coords)), main.MATERIALS[blockType], False )
 			
-			if lineCounter > 1000:
+			if lineCounter > self.maxLineCounter:
 				lineCounterTotal += lineCounter
 				lineCounter = 0
 				self.printStuff(str(lineCounterTotal) + "/" + str(linesTotal))
@@ -66,7 +69,7 @@ class saveModule(object):
 			if lineCounterTotal >= self.maxVoxels:
 				break
 			
-		self.printStuff("loaded " + str(lineCounterTotal) + " blocks")
+		self.printStuff("loaded " + str(lineCounterTotal) + " voxels")
 		self.printStuff('loading completed')
 		
 	def saveWorld(self, model):
@@ -98,7 +101,7 @@ class saveModule(object):
 			lineCounter += 1
 			writer.add_faces(self.getCubeFaces(block[0],block[1],block[2]))
 
-			if lineCounter > 1000:
+			if lineCounter > self.maxLineCounter:
 				lineCounterTotal += lineCounter
 				lineCounter = 0
 				self.printStuff(str(lineCounterTotal) + "/" + str(linesTotal))

@@ -36,7 +36,7 @@ class timerObj(object):
 		if self.stopTime == 0.0:
 			return time.time() - self.startTime
 		else:
-			return self.startTime - self.stopTime
+			return self.stopTime - self.startTime
 	
 	def reset(self):
 		self.startTime = time.time()

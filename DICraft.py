@@ -8,6 +8,8 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key
 
+
+import blockwork
 import saveModule
 import multiTimer
 import sys
@@ -216,7 +218,7 @@ class Model(object):
 			x, y, z = x + dx / m, y + dy / m, z + dz / m
 		return None, None
 
-	def get_empy_space(self, position, vector, max_distance=8):
+	def get_empty_space(self, position, vector, max_distance=8):
 		""" returns the position of an empty space in range
 		return none if there is no empty space
 		
@@ -298,46 +300,6 @@ class Model(object):
 				self.hide_block(position)
 			self.check_neighbors(position)
 		
-	def _get_neighbor_blocks(self, block, neighbors):
-		""" Finds the surrounding blocks of given block.
-			WARNING: crashes after too many recursive calls!
-
-		Parameters
-		----------
-		block : tuple of len 3
-			The (x, y, z) position of the block.
-		neighbors : tuple
-			combined list of neighbors
-
-		"""
-		my_neighbors = neighbors
-		my_neighbors.append(block)
-		x, y, z = block
-		for dx, dy, dz in FACES:
-			key = (x + dx, y + dy, z + dz)
-			if key in self.world and not key in my_neighbors:
-				my_neighbors + self._get_neighbor_blocks(key, my_neighbors)
-				
-		return my_neighbors
-		
-	def remove_block_isle(self, start_block):
-		""" Removing a bunch of blocks that belongs to each other
-
-		Parameters
-		----------
-		start_block : tuple of len 3
-			The (x, y, z) position of the start block to remove.
-		"""
-
-		block_collection = []
-		if start_block:
-			x, y, z = start_block
-			block_collection + self._get_neighbor_blocks(start_block, block_collection)
-		
-		print "removing blocks:", len(block_collection)
-		for b in block_collection:
-			self.remove_block(b)
-
 	def check_neighbors(self, position):
 		""" Check all blocks surrounding `position` and ensure their visual
 		state is current. This means hiding blocks that are not exposed and
@@ -548,6 +510,9 @@ class Window(pyglet.window.Window):
 
 		# Instance of the model that handles the world.
 		self.model = Model()
+		
+		# Instance of world modificator "blockwork"
+		self.blockwork = blockwork.blockwork(self.model)
 
 		# The label that is displayed in the top left of the canvas.
 		self.label = pyglet.text.Label('', font_name='Arial', font_size=16,
@@ -753,7 +718,7 @@ class Window(pyglet.window.Window):
 				if previous:
 					self.model.add_block(previous, self.block)
 				else:
-					emptySpace = self.model.get_empy_space(self.position, vector)
+					emptySpace = self.model.get_empty_space(self.position, vector)
 					if emptySpace:
 						self.model.add_block(emptySpace, self.block)
 		else:
@@ -807,7 +772,7 @@ class Window(pyglet.window.Window):
 		elif symbol == key.DELETE:
 			vector = self.get_sight_vector()
 			block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
-			self.model.remove_block_isle(block)
+			self.blockwork.removeBlockIsle(block)
 		elif symbol == key.F5:
 			self.model.saveModule.saveWorld(self.model)
 		elif symbol == key.F6:
