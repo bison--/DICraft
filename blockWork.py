@@ -55,11 +55,16 @@ class blockWork(object):
 		
 		for block in self.model.world:
 			blocksCurrent += 1
-			if not block in volumeList:
+			isScanned = False
+			for volume in volumeList:
+				if block in volume:
+					isScanned = True
+					
+			if not isScanned:
 				print blocksCurrent, "/", blocksTotal
-				print "found new volume:", block
+				#print "found new volume:", block
 				volumeList.append(self.getConnectedBlocks(block))
-				print "volume size:", volumeList[len(volumeList)-1]
+				#print "volume size:", volumeList[len(volumeList)-1]
 				
 		for volume in volumeList:
 			print "size:", len(volume)

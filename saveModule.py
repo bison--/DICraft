@@ -69,7 +69,7 @@ class saveModule(object):
 			if lineCounterTotal >= self.maxVoxels:
 				break
 			
-		self.printStuff("loaded " + str(lineCounterTotal) + " voxels")
+		self.printStuff("loaded " + str(lineCounterTotal + lineCounter) + " voxels")
 		self.printStuff('loading completed')
 		
 	def saveWorld(self, model):
