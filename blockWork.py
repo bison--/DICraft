@@ -97,10 +97,14 @@ class blockWork(object):
 			blockCollection = self.getConnectedBlocks(startBlock)
 			print "removing blocks:", len(blockCollection)
 			rmCounter = 0
+			rmCounterTotal = 0
 			for b in blockCollection:
 				rmCounter += 1
 				self.model.remove_block(b)
 				if rmCounter >= 100:
+					rmCounterTotal += rmCounter
 					rmCounter = 0
-					print rmCounter, "/", len(blockCollection)
+					print rmCounterTotal, "/", len(blockCollection)
+					
+			print rmCounterTotal, "/", len(blockCollection)
 			print "removing completed"

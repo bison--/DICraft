@@ -6,14 +6,13 @@ import dicom
 import pnmHeader
 import saveModule
 import multiTimer
-#[-8, -3, 21]=>STONE
 
 
 minVal = 10 #130 #7 #12850
 maxVal = 57 #134 #30 #13000 #13366
 materialSwitch = 15
 
-#materialMatrix = ["GRASS", "SAND", "BRICK", "STONE"]
+# max len of material index we can use
 materialMatrixL = 99 #len(materialMatrix)
 
 

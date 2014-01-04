@@ -1,4 +1,4 @@
-import DICraft as main # we need the blocktypes from the main program
+import engine as main # we need the blocktypes from the main program
 import json
 import os
 import sys
