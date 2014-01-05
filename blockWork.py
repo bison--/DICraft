@@ -59,6 +59,7 @@ class blockWork(object):
 			for volume in volumeList:
 				if block in volume:
 					isScanned = True
+					break
 					
 			if not isScanned:
 				print blocksCurrent, "/", blocksTotal
@@ -73,10 +74,13 @@ class blockWork(object):
 			
 		return volumeList
 
+	def block2hash(self, block):
+		return "{}.{}.{}".format(block[0],block[1],block[2])
+
 	def getConnectedBlocks(self, startBlock):
-		blockCollection = []
+		blockCollection = {}
 		if startBlock:
-			blockCollection = [startBlock, ]
+			blockCollection = {startBlock:0}
 			blocksToCheck = [startBlock, ]
 
 			blockCountCurrent = 0
@@ -86,8 +90,9 @@ class blockWork(object):
 				for dx, dy, dz in DICraft.FACES:
 					blockCountCurrent += 1
 					key = (x + dx, y + dy, z + dz)
+					#kI = self.model.world.index(key)
 					if key in self.model.world and not key in blockCollection:
-						blockCollection.append(key)
+						blockCollection[key] = 0
 						blocksToCheck.append(key)
 				
 				if self.mt.duration("getConnectedBlocks") >= 10:
@@ -97,13 +102,29 @@ class blockWork(object):
 						
 		return blockCollection
 		
+	def removeSmallVolumes(self, volumeList, smallest = 10000):
+		volCounter = 0
+		for volume in volumeList:
+			volCounter += 1
+			if len(volume) < smallest:
+				print "removing volume:", volCounter, "/", len(volumeList), "(", len(volume), "blocks)"
+				rmCounter = 0
+				rmCounterTotal = 0
+				for key in volume.keys():
+					self.model.remove_block(key)
+					rmCounter += 1
+					if rmCounter >= 100:
+						rmCounterTotal += rmCounter
+						rmCounter = 0
+						print rmCounterTotal, "/", len(volume)
+		
 	def removeBlockIsle(self, startBlock):
 		if startBlock:
 			blockCollection = self.getConnectedBlocks(startBlock)
 			print "removing blocks:", len(blockCollection)
 			rmCounter = 0
 			rmCounterTotal = 0
-			for b in blockCollection:
+			for b in blockCollection.keys():
 				rmCounter += 1
 				self.model.remove_block(b)
 				if rmCounter >= 100:

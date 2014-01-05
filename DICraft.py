@@ -98,8 +98,8 @@ class Window(pyglet.window.Window):
 		# a master timer for all the timers!
 		self.mt = multiTimer.multiTimer()
 		
-		# collect volumes
-		#self.blockWork.getVolumes()
+		# collect and remove "small" volumes
+		self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), 10000)
 		
 		# add timer and bool for the initial loading text while rendereing the world
 		# for the first time

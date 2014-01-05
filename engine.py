@@ -210,7 +210,7 @@ class Model(object):
 		return None, None
 
 	def get_empty_space(self, position, vector, max_distance=8):
-		""" returns the position of an empty space in range
+		""" returns the position of empty space in range
 		return none if there is no empty space
 		
 		Parameters
