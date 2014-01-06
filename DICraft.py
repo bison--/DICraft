@@ -92,6 +92,9 @@ class Window(pyglet.window.Window):
 		# second. This is the main game event loop.
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 		
+		# interaction speed during mouse down events
+		self.mouseInteractionSpeed = 0.35
+		
 		# start in window mode!
 		self.fullScreen = False
 		
@@ -211,6 +214,21 @@ class Window(pyglet.window.Window):
 		# disable collision
 		#self.position = (x, y, z)
 		self.position = (x + dx, y + dy, z + dz)
+		
+		# durin mouse down events, do some interaction
+		if self.mt.duration("mouse.LEFT") > self.mouseInteractionSpeed:
+			vector = self.get_sight_vector()
+			block, previous = self.model.hit_test(self.position, vector, EDIT_DISTANCE)
+			if block:
+				texture = self.model.world[block]
+				self.model.remove_block(block)
+			self.mt.start("mouse.LEFT")
+		elif self.mt.duration("mouse.RIGHT") > self.mouseInteractionSpeed:
+			vector = self.get_sight_vector()
+			block, previous = self.model.hit_test(self.position, vector, EDIT_DISTANCE)
+			if previous:
+				self.model.add_block(previous, self.block)
+			self.mt.start("mouse.RIGHT")
 
 	def collide(self, position, height):
 		""" Checks to see if the player at the given `position` and `height`
@@ -273,10 +291,12 @@ class Window(pyglet.window.Window):
 			vector = self.get_sight_vector()
 			block, previous = self.model.hit_test(self.position, vector, EDIT_DISTANCE)
 			if button == pyglet.window.mouse.LEFT:
+				self.mt.start("mouse.LEFT")
 				if block:
 					texture = self.model.world[block]
 					self.model.remove_block(block)
 			else:
+				self.mt.start("mouse.RIGHT")
 				if previous:
 					self.model.add_block(previous, self.block)
 				else:
@@ -286,6 +306,39 @@ class Window(pyglet.window.Window):
 		else:
 			self.set_exclusive_mouse(True)
 
+	def on_mouse_release(self, x, y, button, modifiers):
+		""" Called when a mouse button is released.
+		"""
+		# stop the "interaction" timers
+		if button == pyglet.window.mouse.LEFT:
+			self.mt.stop("mouse.LEFT")
+		elif button == pyglet.window.mouse.RIGHT:
+			self.mt.stop("mouse.RIGHT")
+			
+	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+		""" Called when the player moves the mouse AND a mouse button is pressed.
+		
+		Parameters
+		----------
+		x, y : int
+			The coordinates of the mouse click. Always center of the screen if
+			the mouse is captured.
+		dx, dy : float
+			The movement of the mouse.
+		button : int
+			Number representing mouse button that was clicked. 1 = left button,
+			4 = right button.
+		modifiers : int
+			Number representing any modifying keys that were pressed when the
+			mouse button was clicked.
+		"""
+		# allow movement while mouse button is down
+		self.on_mouse_motion(x, y, dx, dy)
+		# simulate a "dead" center for non-trackball users
+		if dx > 1.0 or dy > 1.0:
+			# when moved, use the mouse like a brush
+			self.on_mouse_press(x, y, buttons, modifiers)
+		
 	def on_mouse_motion(self, x, y, dx, dy):
 		""" Called when the player moves the mouse.
 
