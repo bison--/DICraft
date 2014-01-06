@@ -102,7 +102,7 @@ class Window(pyglet.window.Window):
 		self.mt = multiTimer.multiTimer()
 		
 		# collect and remove "small" volumes
-		self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), 10000)
+		#self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), 10000)
 		
 		# add timer and bool for the initial loading text while rendereing the world
 		# for the first time
@@ -396,7 +396,7 @@ class Window(pyglet.window.Window):
 			self.model.saveModule.saveWorld(self.model)
 		elif symbol == key.F6:
 			#self.model.saveModule.exportOpenScad(self.model)
-			self.model.saveModule.exportStl(self.model)
+			self.model.saveModule.exportStlZ(self.model)
 		elif symbol == key.ESCAPE:
 			exit()
 		elif symbol == key.F1:

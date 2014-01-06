@@ -108,19 +108,57 @@ class saveModule(object):
 
 		writer.close()
 		self.printStuff('export stl completed')
+	
+	def exportStlZ(self, model):
+		self.printStuff('start export stl Z...')
+		fh = open(self.getSaveDest() + '.stl', 'wb')
+		#writer = Binary_STL_Writer(fp)
+		writer = stlWriter.Binary_STL_Writer(fh)
+		
+		zCollectionMin = {}
+		zCollectionMax = {}
+		for block in model.shown:
+			xy = (block[0], block[1])
+			z = block[2]
+			if not xy in zCollectionMin:
+				zCollectionMin[xy] = z
+			elif z < zCollectionMin[xy]:
+				zCollectionMin[xy] = z
+			
+			if not xy in zCollectionMax:
+				zCollectionMax[xy] = z
+			elif z > zCollectionMax[xy]:
+				zCollectionMax[xy] = z
+			
+		lineCounter = 0
+		lineCounterTotal = 0
+		linesTotal = len(model.shown)
+		for blockXY in zCollectionMin:
+			lineCounter += 1
+			
+			#print blockXY,":",zCollectionMin[blockXY], zCollectionMax[blockXY]
+			writer.add_faces(self.getCubeFaces(blockXY[0],blockXY[1],zCollectionMin[blockXY], zCollectionMax[blockXY]))
 
-	def getCubeFaces(self, x=0,y=0,z=0):
+			if lineCounter > self.maxLineCounter:
+				lineCounterTotal += lineCounter
+				lineCounter = 0
+				self.printStuff(str(lineCounterTotal) + "/" + str(linesTotal))
+
+		writer.close()
+		self.printStuff('export stl completed')
+
+	def getCubeFaces(self, x=0,y=0,z=0,zTop=0):
 		# cube size
 		s = 1.0
 		# cube corner points
 		p1 = (0+x, 0+y, 0+z)
-		p2 = (0+x, 0+y, s+z)
+		p2 = (0+x, 0+y, s+z+zTop)
 		p3 = (0+x, s+y, 0+z)
-		p4 = (0+x, s+y, s+z)
+		p4 = (0+x, s+y, s+z+zTop)
 		p5 = (s+x, 0+y, 0+z)
-		p6 = (s+x, 0+y, s+z)
+		p6 = (s+x, 0+y, s+z+zTop)
 		p7 = (s+x, s+y, 0+z)
-		p8 = (s+x, s+y, s+z)
+		p8 = (s+x, s+y, s+z+zTop)
 
 		# define the 6 cube faces
 		# faces just lists of 3 or 4 vertices
