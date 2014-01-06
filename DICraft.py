@@ -215,7 +215,7 @@ class Window(pyglet.window.Window):
 		#self.position = (x, y, z)
 		self.position = (x + dx, y + dy, z + dz)
 		
-		# durin mouse down events, do some interaction
+		# during mouse down events, do some interaction
 		if self.mt.duration("mouse.LEFT") > self.mouseInteractionSpeed:
 			vector = self.get_sight_vector()
 			block, previous = self.model.hit_test(self.position, vector, EDIT_DISTANCE)
