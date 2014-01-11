@@ -7,6 +7,7 @@ import sys
 ##from pyglet import image
 #from pyglet.gl import *
 ##from pyglet.graphics import TextureGroup
+import pyglet
 from pyglet.window import key
 from engine import *
 

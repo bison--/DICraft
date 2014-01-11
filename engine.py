@@ -82,7 +82,6 @@ for i in xrange(100):
 	MATERIALS.append(tex_coords_simple(i))
 
 
-
 FACES = [
 	( 0, 1, 0),
 	( 0,-1, 0),

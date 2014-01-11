@@ -1,4 +1,4 @@
-import DICraft
+import engine
 import multiTimer
 
 class blockWork(object):
@@ -22,7 +22,7 @@ class blockWork(object):
 		my_neighbors = neighbors
 		my_neighbors.append(block)
 		x, y, z = block
-		for dx, dy, dz in FACES:
+		for dx, dy, dz in engine.FACES:
 			key = (x + dx, y + dy, z + dz)
 			if key in self.model.world and not key in my_neighbors:
 				my_neighbors + self._get_neighbor_blocks(key, my_neighbors)
@@ -48,6 +48,8 @@ class blockWork(object):
 			self.remove_block(b)
 
 	def getVolumes(self):
+		""" return a list of dictionarys with connected blocks which build a volume
+		"""
 		volumeList = []
 		
 		blocksTotal = len(self.model.world)
@@ -78,6 +80,8 @@ class blockWork(object):
 		return "{}.{}.{}".format(block[0],block[1],block[2])
 
 	def getConnectedBlocks(self, startBlock):
+		""" returns a dictionary with ALL connected blocks, a volume
+		"""
 		blockCollection = {}
 		if startBlock:
 			blockCollection = {startBlock:0}
@@ -87,7 +91,7 @@ class blockWork(object):
 			self.mt.start("getConnectedBlocks")
 			while blocksToCheck:
 				x, y, z = blocksToCheck.pop()
-				for dx, dy, dz in DICraft.FACES:
+				for dx, dy, dz in engine.FACES:
 					blockCountCurrent += 1
 					key = (x + dx, y + dy, z + dz)
 					#kI = self.model.world.index(key)
@@ -102,7 +106,45 @@ class blockWork(object):
 						
 		return blockCollection
 		
+	def getConnectedBlocksDirection(self, startBlock, cX=False, cY=False, cZ=False):
+		blockCollection = set()
+		if startBlock:
+			#blockCollection = set(startBlock)
+			blockCollection = {startBlock:0,}
+			blocksToCheck = [startBlock, ]
+			
+			blockCountCurrent = 0
+			self.mt.start("getConnectedBlocksDirection")
+			while blocksToCheck:
+				x, y, z = blocksToCheck.pop()
+								
+				for dx, dy, dz in engine.FACES:
+					blockCountCurrent += 1
+					key = (x + dx, y + dy, z + dz)
+					doThisOne = False
+					
+					if cX and dx != 0:
+						doThisOne = True
+					elif cY and dy != 0:
+						doThisOne = True
+					elif cZ and dz != 0:
+						doThisOne = True
+					
+					if doThisOne and key in self.model.world and not key in blockCollection:
+						#blockCollection.add(key)
+						blockCollection[key] = 0
+						blocksToCheck.append(key)
+				
+				if self.mt.duration("getConnectedBlocks") >= 10:
+					self.mt.start("getConnectedBlocks")
+					print "still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10 ,"/s)"
+					blockCountCurrent = 0
+
+		return blockCollection
+		
 	def removeSmallVolumes(self, volumeList, smallest = 10000):
+		""" collects ALL volumes and removes if the size is smaller than the given size
+		"""
 		volCounter = 0
 		for volume in volumeList:
 			volCounter += 1
@@ -119,6 +161,8 @@ class blockWork(object):
 						print rmCounterTotal, "/", len(volume)
 		
 	def removeBlockIsle(self, startBlock):
+		""" removes ALL blocks connected to the given block!
+		"""
 		if startBlock:
 			blockCollection = self.getConnectedBlocks(startBlock)
 			print "removing blocks:", len(blockCollection)

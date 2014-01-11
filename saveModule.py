@@ -1,9 +1,11 @@
-import engine as main # we need the blocktypes from the main program
+import engine as main  # we need the blocktypes from the main program
 import json
 import os
 import sys
 from time import gmtime, strftime
 import stlWriter
+import blockWork
+
 		
 class saveModule(object):
 	def __init__(self):		
@@ -109,7 +111,7 @@ class saveModule(object):
 		writer.close()
 		self.printStuff('export stl completed')
 	
-	def exportStlZ(self, model):
+	def exportStlZstretch(self, model):
 		self.printStuff('start export stl Z...')
 		fh = open(self.getSaveDest() + '.stl', 'wb')
 		#writer = Binary_STL_Writer(fp)
@@ -137,7 +139,7 @@ class saveModule(object):
 			lineCounter += 1
 			
 			#print blockXY,":",zCollectionMin[blockXY], zCollectionMax[blockXY]
-			writer.add_faces(self.getCubeFaces(blockXY[0],blockXY[1],zCollectionMin[blockXY], zCollectionMax[blockXY]))
+			writer.add_faces(self.getCubeFaces(blockXY[0],blockXY[1],zCollectionMin[blockXY], zCollectionMax[blockXY]-zCollectionMin[blockXY]))
 
 			if lineCounter > self.maxLineCounter:
 				lineCounterTotal += lineCounter
@@ -146,8 +148,49 @@ class saveModule(object):
 
 		writer.close()
 		self.printStuff('export stl completed')
-
-	def getCubeFaces(self, x=0,y=0,z=0,zTop=0):
+		
+	def exportStlZ(self, model):
+		bw = blockWork.blockWork(model)
+		self.printStuff('start export stl Z 2.x...')
+		fh = open(self.getSaveDest() + '.stl', 'wb')
+		writer = stlWriter.Binary_STL_Writer(fh)
+		
+		#collectedBlocks = set()
+		collectedBlocks = {}
+		zTubes =  {}
+		for visBlock in model.shown:
+			if not visBlock in collectedBlocks:
+				x = None
+				y = None
+				z = None
+				minZ = None
+				maxZ = None
+			
+				for block in bw.getConnectedBlocksDirection(visBlock, cZ=True):
+					x, y, z = block
+					if maxZ is None or z > maxZ:
+						maxZ = z
+					
+					if minZ is None or z < minZ:
+						minZ = z
+					#collectedBlocks.add(block)
+					collectedBlocks[block] = 0
+				
+				zTubes[(x, y, z)] = (minZ, maxZ)
+		
+		for tube in zTubes:
+			x, y, z = tube
+			#print tube, zTubes[tube][0], zTubes[tube][1]
+			if zTubes[tube][0] == zTubes[tube][1]:
+				writer.add_faces(self.getCubeFaces(x, y, zTubes[tube][0]))
+			else:
+				# we need the difference between the coords!
+				writer.add_faces(self.getCubeFaces(x, y, zTubes[tube][0], zTubes[tube][1]-zTubes[tube][0]))
+					
+		writer.close()
+		self.printStuff('export stl completed')
+		
+	def getCubeFaces(self, x=0, y=0, z=0, zTop=0):
 		# cube size
 		s = 1.0
 		# cube corner points
