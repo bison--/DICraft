@@ -115,6 +115,9 @@ class Window(pyglet.window.Window):
 		# collect and remove "small" volumes
 		#self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), 10000)
 		
+		# fill empty space
+		#self.blockWork.fillHoles(10)
+		
 		# add timer and bool for the initial loading text while rendereing the world
 		# for the first time
 		self.renderWorld = True

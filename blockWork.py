@@ -76,9 +76,6 @@ class blockWork(object):
 			
 		return volumeList
 
-	def block2hash(self, block):
-		return "{}.{}.{}".format(block[0],block[1],block[2])
-
 	def getConnectedBlocks(self, startBlock):
 		""" returns a dictionary with ALL connected blocks, a volume
 		"""
@@ -178,3 +175,114 @@ class blockWork(object):
 					
 			print rmCounterTotal, "/", len(blockCollection)
 			print "removing completed"
+	
+	
+	def fillHoles(self, smallest=10000):
+		spaceList = self.getHoles()
+		print "found", len(spaceList), "holes"
+		
+		for hole in spaceList:
+			if len(hole) < smallest:
+				print "filling hole", len(hole)
+				for space in hole:
+					self.model.add_block(space)
+		
+		print "fillHoles completed"
+	
+	def getWorldBoundaries(self, addSpace=True):
+		axRange = range(3)
+		boundaries = [[None, None], [None, None], [None, None]]
+				
+		# get min and max from every axis
+		for block in self.model.world:
+			for axis in axRange:
+				#print "block[axis]", block[axis]
+				if boundaries[axis][0] is None or block[axis] < boundaries[axis][0]:
+					boundaries[axis][0] = block[axis]
+					
+				if boundaries[axis][1] is None or block[axis] > boundaries[axis][1]:
+					boundaries[axis][1] = block[axis]
+		
+		# add more space to make shure the outer space surrounded the whole construct		
+		if addSpace:
+			for axis in axRange:
+				boundaries[axis][0] -= 1
+				boundaries[axis][1] += 1
+			
+		return boundaries
+	
+	def isInWorldBoundaries(self, block, boundaries):	
+		isInBound = True
+		if block[0] < boundaries[0][0] or block[0] > boundaries[0][1]:
+			isInBound = False
+		elif block[1] < boundaries[1][0] or block[1] > boundaries[1][1]:
+			isInBound = False
+		elif block[2] < boundaries[2][0] or block[2] > boundaries[2][1]:
+			isInBound = False
+	
+		#if isInBound:
+			#print "block, boundaries", block, boundaries
+		return isInBound
+		
+	def getHoles(self):
+		boundaries = self.getWorldBoundaries()
+		#boundaries = {"x":[None, None], "y":[None, None], "z":[None, None]}
+		#boundariesX = [None, None]
+		#boundariesY = [None, None]
+		#boundariesZ = [None, None]
+		
+		blockDict = {}
+		if self.model.shown:
+			blockDict = self.model.shown
+		else:
+			blockDict = self.model.world
+		
+		checkedBlocks = {}
+		spaceList = []
+		spaceToCheck = []
+		for block in blockDict:
+			checkedBlocks[block] = 0
+			x, y, z = block
+			for dx, dy, dz in engine.FACES:
+				key = (x + dx, y + dy, z + dz)
+				
+				if not key in self.model.world and not key in spaceToCheck and not key in checkedBlocks and self.isInWorldBoundaries(key, boundaries):
+					print "spaceToCheck.append(key)", key
+					spaceToCheck.append(key)
+			
+			while spaceToCheck:
+				space = spaceToCheck.pop()
+				checkedBlocks[space] = 0
+				if not space in self.model.world and not space in spaceToCheck and self.isInWorldBoundaries(space, boundaries):
+					spaceList.append(self.getConnectedSpace(space, boundaries))
+				
+		return spaceList
+		
+	def getConnectedSpace(self, startSpace, boundaries=None):
+		if not boundaries:
+			boundaries = self.getWorldBoundaries()
+		
+		if startSpace:
+			blockCollection = {startSpace:0}
+			blocksToCheck = [startSpace, ]
+
+			blockCountCurrent = 0
+			self.mt.start("getConnectedBlocks")
+			while blocksToCheck:
+				x, y, z = blocksToCheck.pop()
+				for dx, dy, dz in engine.FACES:
+					blockCountCurrent += 1
+					key = (x + dx, y + dy, z + dz)
+					#kI = self.model.world.index(key)
+					
+					if not key in self.model.world and not key in blockCollection and self.isInWorldBoundaries(key, boundaries):
+						blockCollection[key] = 0
+						blocksToCheck.append(key)
+				
+				if self.mt.duration("getConnectedBlocks") >= 10:
+					self.mt.start("getConnectedBlocks")
+					print "still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10 ,"/s)"
+					blockCountCurrent = 0
+		
+		print "found space volume:", len(blockCollection)
+		return blockCollection
