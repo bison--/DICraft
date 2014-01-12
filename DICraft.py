@@ -68,25 +68,35 @@ class Window(pyglet.window.Window):
 			key._1, key._2, key._3, key._4, key._5,
 			key._6, key._7, key._8, key._9, key._0]
 
+		# the block that is currently focused
+		self.focusedBlock = None
+
 		# Instance of the model that handles the world.
 		self.model = Model()
 		
 		# Instance of world modificator "blockwork"
 		self.blockWork = blockWork.blockWork(self.model)
 
+		self.labelDict = {}
+
 		# The label that is displayed in the top left of the canvas.
-		self.label = pyglet.text.Label('', font_name='Arial', font_size=16,
+		self.labelDict['worldInfo'] = pyglet.text.Label('', font_name='Arial', font_size=16,
 			x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
 			color=(0, 0, 0, 255))
 
 		# fix label while rendering the world
-		self.loabel = pyglet.text.Label("!RENDERING WORLD, STAY TUNED!", font_name='Arial', font_size=16,
+		self.labelDict['loabel'] = pyglet.text.Label("!RENDERING WORLD, STAY TUNED!", font_name='Arial', font_size=16,
 			x=self.width / 2, y=self.height / 2 , anchor_x='center', anchor_y='top',
 			color=(0, 0, 0, 255))
 			
-		# fix label while rendering the world
-		self.labelNotify = pyglet.text.Label("", font_name='Arial', font_size=16,
+		# notifications from engine
+		self.labelDict['notify'] = pyglet.text.Label("", font_name='Arial', font_size=16,
 			x=self.width / 2, y=self.height / 2 , anchor_x='center', anchor_y='top',
+			color=(0, 0, 0, 255))
+		
+		# focues block label
+		self.labelDict['focusedBlock'] = pyglet.text.Label("", font_name='Arial', font_size=12,
+			x=5, y=25, anchor_x='left', anchor_y='top',
 			color=(0, 0, 0, 255))
 
 		# This call schedules the `update()` method to be called 60 times a
@@ -444,10 +454,13 @@ class Window(pyglet.window.Window):
 
 		"""
 		# label
-		self.label.y = height - 10
+		self.labelDict["worldInfo"].y = height - 10
+		self.labelDict["focusedBlock"].y = 20
+		
 		# reticle
 		if self.reticle:
 			self.reticle.delete()
+		
 		x, y = self.width / 2, self.height / 2
 		n = 10
 		self.reticle = pyglet.graphics.vertex_list(4,
@@ -513,9 +526,9 @@ class Window(pyglet.window.Window):
 
 		"""
 		vector = self.get_sight_vector()
-		block = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
-		if block:
-			x, y, z = block
+		self.focusedBlock = self.model.hit_test(self.position, vector, EDIT_DISTANCE)[0]
+		if self.focusedBlock:
+			x, y, z = self.focusedBlock
 			vertex_data = cube_vertices(x, y, z, CUBE_SIZE + 0.01)
 			glColor3d(255, 255, 21)
 			# white focus
@@ -523,26 +536,32 @@ class Window(pyglet.window.Window):
 			# borderlines
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+			
 
 	def draw_label(self):
 		""" Draw the label in the top left of the screen.
 
 		"""
 		x, y, z = self.position
-		self.label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
+		self.labelDict['worldInfo'].text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
 			pyglet.clock.get_fps(), x, y, z,
 			len(self.model._shown), len(self.model.world))
-		self.label.draw()
+		self.labelDict['worldInfo'].draw()
 		
 		if self.renderWorld:
-			self.loabel.draw()
+			self.labelDict['loabel'].draw()
 			if self.mt.duration("renderWorld") >= 1.5:
 				self.mt.stop("renderWorld")
 				self.renderWorld = False
 		
 		#TODO: draw some notifications from self.model! 
 		if self.model.notification:
-			self.labelNotify.text = self.model.notification
+			self.labelDict['notify'].text = self.model.notification
+			self.labelDict['notify'].draw()
+		
+		if self.focusedBlock:
+			self.labelDict['focusedBlock'].text = "x:{},y:{},z:{}".format(self.focusedBlock[0], self.focusedBlock[1], self.focusedBlock[2])
+			self.labelDict['focusedBlock'].draw()
 			
 
 	def draw_reticle(self):
