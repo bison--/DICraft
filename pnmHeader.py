@@ -60,6 +60,7 @@ def read_pnm_header(infile, supported=('P5','P6')):
             while c not in '\n\r':
                 c = getc()
         if not c.isdigit():
+            print 'unexpected character %s found in header' % c
             raise Error('unexpected character %s found in header' % c)
         # According to the specification it is legal to have comments
         # that appear in the middle of a token.

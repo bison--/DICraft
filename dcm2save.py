@@ -8,13 +8,15 @@ import saveModule
 import multiTimer
 
 
-minVal = 7 #130 #7 #12850
-maxVal = 30 #134 #30 #13000 #13366
+minVal = 40 #12850
+maxVal = 60  #13000 #13366
 materialSwitch = 15
 
 # max len of material index we can use
 materialMatrixL = 99 #len(materialMatrix)
 
+# heightMap
+heightMap = False
 
 def getInt(name):
 	#TODO: make a USEFUL sort algorythm!
@@ -38,13 +40,17 @@ sourceFiles = []
 if len(sys.argv) > 1:
 	sourceFolder = sys.argv[1]
 
-sourceFilesTmp = os.listdir(sourceFolder)
-sourceFilesTmp.sort(key=getInt)
-#sourceFiles = sorted(sourceFiles, key=lambda x: int(x.split('.')[3]))
 
-for i in range(len(sourceFilesTmp)):
-	if not sourceFilesTmp[i].lower().endswith(".md"):
-		sourceFiles.append(os.path.join(sourceFolder, sourceFilesTmp[i]))
+if heightMap:
+	sourceFiles.append(sys.argv[1])
+else:
+	sourceFilesTmp = os.listdir(sourceFolder)
+	sourceFilesTmp.sort(key=getInt)
+	#sourceFiles = sorted(sourceFiles, key=lambda x: int(x.split('.')[3]))
+
+	for i in range(len(sourceFilesTmp)):
+		if not sourceFilesTmp[i].lower().endswith(".md"):
+			sourceFiles.append(os.path.join(sourceFolder, sourceFilesTmp[i]))
 
 
 #tiffiles.sort(key=getint)
@@ -331,7 +337,13 @@ def getFromPnm():
 					#		material = i
 					
 					countVoxel += 1
-					finalStr += "[{y}, {z}, {x}]:{mat}\n".format(x=x, y=y, z=countZ, mat=material)
+					
+					if heightMap:
+						for zI in range((pixVal - minVal)):
+							finalStr += "[{y}, {z}, {x}]:{mat}\n".format(x=x, y=y, z=zI, mat=material)
+					else:
+						finalStr += "[{y}, {z}, {x}]:{mat}\n".format(x=x, y=y, z=countZ, mat=material)
+
 					#print "added:", x,y,z,':', pixVal
 				else:
 					STATS.addVal(pixVal, False)
