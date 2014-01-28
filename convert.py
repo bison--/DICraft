@@ -12,6 +12,9 @@ dcmFiles = []
 clearTemp = True
 if len(sys.argv) > 1:
 	dcmFilePath = sys.argv[1]
+
+if len(sys.argv) > 2:
+	destPath = sys.argv[2]
 	
 dcmFilesTmp = os.listdir(dcmFilePath)
 dcmFilesTmp.sort()

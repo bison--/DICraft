@@ -18,16 +18,30 @@ materialMatrixL = 99 #len(materialMatrix)
 # heightMap
 heightMap = False
 
+def fileNameHasNumber(name):
+	parts = name.split(".")
+	part = parts[0]
+	for i in reversed(range(len(part))):
+		if part[i].isdigit():
+			return True
+	return False
+
 def getInt(name):
 	#TODO: make a USEFUL sort algorythm!
 	#tmp/3DSlice100.dcm.pnm
 	#basename = name.partition('.')
 	#alpha, num = basename.split('_')
 	parts = name.split(".")
-	dirt = parts[0].replace("3DSlice", "")
+	#dirt = parts[0].replace("3DSlice", "")
+	part = parts[0]
+	finalNumber = ""
+	for i in reversed(range(len(part))):
+		if part[i].isdigit():
+			finalNumber = str(part[i]) + finalNumber
+	
 	#dirt = name.replace("3DSlice", "").replace(".dcm.pgm", "")
-	if dirt.isdigit():
-		return int(dirt)
+	if finalNumber.isdigit():
+		return int(finalNumber)
 	else:
 		return 0
 
@@ -49,7 +63,7 @@ else:
 	#sourceFiles = sorted(sourceFiles, key=lambda x: int(x.split('.')[3]))
 
 	for i in range(len(sourceFilesTmp)):
-		if not sourceFilesTmp[i].lower().endswith(".md"):
+		if not sourceFilesTmp[i].lower().endswith(".md") and fileNameHasNumber(sourceFilesTmp[i]):
 			sourceFiles.append(os.path.join(sourceFolder, sourceFilesTmp[i]))
 
 
