@@ -14,6 +14,7 @@ class signalHandler(object):
 		#print dir(self._ui.cmdStart)
 		
 	def cmdDcm_clicked(self):
+		#http://zetcode.com/gui/pyqt4/german/dialogs/
 		#res = str(QFileDialog.getExistingDirectory(self, 'Choose Save Directory', settings.save_dir))
 		# local_folder_path = QFileDialog.getExistingDirectory(self.manager_widget, QString("Select Download Folder"), QString(self.last_dl_location), QFileDialog.ShowDirsOnly|QFileDialog.HideNameFilterDetails|QFileDialog.ReadOnly)
 		#print dir(self._ui.txtDcm)
