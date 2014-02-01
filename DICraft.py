@@ -112,11 +112,14 @@ class Window(pyglet.window.Window):
 		# a master timer for all the timers!
 		self.mt = multiTimer.multiTimer()
 		
-		# collect and remove "small" volumes
-		#self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), 10000)
-		
-		# fill empty space
-		#self.blockWork.fillHoles(10)
+		# check args for parameters
+		for arg in sys.argv:
+			if arg.startswith("rmVol="):
+				# collect and remove "small" volumes
+				self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), int(arg.replace("rmVol=", ""))) #10000)
+			elif arg.startswith("fillCavitis"):
+				# fill empty space
+				self.blockWork.fillHoles()
 		
 		# add timer and bool for the initial loading text while rendereing the world
 		# for the first time

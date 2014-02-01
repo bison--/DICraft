@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>265</width>
-    <height>270</height>
+    <width>366</width>
+    <height>347</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>270</height>
+    <height>270000</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -27,136 +27,284 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Folder with DICOM files:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLineEdit" name="txtDcm">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>100</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>multiImageTest/</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="cmdDcm">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>31</width>
-            <height>27</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>31</width>
-            <height>27</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>TEMP folder:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLineEdit" name="txtTmp">
-          <property name="text">
-           <string>tmp/</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="cmdTmp">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>31</width>
-            <height>27</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>31</width>
-            <height>27</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Project name:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLineEdit" name="txtProject">
-          <property name="text">
-           <string>testImage</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>.sav</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="cmdStart">
-      <property name="text">
-       <string>START</string>
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>convert DCM</string>
+       </attribute>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>9</y>
+          <width>321</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Folder with DICOM files:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLineEdit" name="txtDcm">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>100</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>multiImageTest/</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="cmdDcm">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>31</width>
+               <height>27</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>31</width>
+               <height>27</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="cmdStartConvert">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>200</y>
+          <width>85</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>START</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>generate Project</string>
+       </attribute>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>9</y>
+          <width>321</width>
+          <height>62</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Project name:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLineEdit" name="txtProject">
+             <property name="text">
+              <string>testImage</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>.sav</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="cmdStartToSave">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>200</y>
+          <width>81</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>START</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="gridLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>80</y>
+          <width>321</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0" alignment="Qt::AlignTop">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>minimum gray value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" alignment="Qt::AlignRight">
+          <widget class="QSpinBox" name="spinBox"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QSlider" name="horizontalSlider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="gridLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>140</y>
+          <width>321</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0" alignment="Qt::AlignTop">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>maximum gray value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" alignment="Qt::AlignRight">
+          <widget class="QSpinBox" name="spinBox_2"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QSlider" name="horizontalSlider_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>start Editor</string>
+       </attribute>
+       <widget class="QPushButton" name="cmdStartEditor">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>200</y>
+          <width>85</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>START</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>321</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>select project:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmbProjects"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>80</y>
+          <width>321</width>
+          <height>33</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QCheckBox" name="chkRemoveVoluminas">
+           <property name="text">
+            <string>remove voluminas smaller than:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="nutRemoveVoluminas"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>321</width>
+          <height>33</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QCheckBox" name="chkFillCavitis">
+           <property name="text">
+            <string>fill cavitis</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -166,8 +314,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>265</width>
-     <height>25</height>
+     <width>366</width>
+     <height>29</height>
     </rect>
    </property>
   </widget>
