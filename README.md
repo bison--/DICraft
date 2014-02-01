@@ -13,13 +13,14 @@ that these instructions always fit the actual behavior!
 
 Debian based:
 
-    sudo apt-get install python-pyglet python-dicom
+    sudo apt-get install python-pyglet python-dicom python-qt4
 
 Others "maybe":
 
-    sudo pip install pyglet python-dicom
+    sudo pip install pyglet python-dicom python-qt4
 
 In some distributions **python-dicom** is named **pydicom**  
+The conversion parts should work without GUI, so you will need QT4 **ONLY** when strating the GUI-Tools.  
 
 If you want/have to convert DICOM files with **convert.py** that we can use them,  
 you need **dcmj2pnm** what is part of the dcmtk
