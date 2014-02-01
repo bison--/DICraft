@@ -62,7 +62,7 @@ class saveModule(object):
 				#print blockType
 				#print main.MATERIALS[blockType]
 				# convert the json list into tuple; json ONLY get lists but we need tuples
-				model.add_block( tuple(json.loads(coords)), main.MATERIALS[blockType], False )
+				model.add_block( tuple(json.loads(coords)), blockType, False )
 			
 			if lineCounter > self.maxLineCounter:
 				lineCounterTotal += lineCounter
@@ -85,8 +85,8 @@ class saveModule(object):
 		
 		for block in model.world:
 			# 1. convert the block coords into json
-			# 2. get the RAW texture data with model.world[block] and find the index in main.MATERIALS.index(i)
-			worldString += "{0}:{1}\n".format(json.dumps(block), main.MATERIALS.index(model.world[block]))
+			# 2. just get the material index (saves quantillion amount of RAM)
+			worldString += "{0}:{1}\n".format(json.dumps(block), model.world[block])
 
 		fh.write(worldString)
 		fh.close()

@@ -324,9 +324,9 @@ class Model(object):
 		texture = self.world[position]
 		self.shown[position] = texture
 		if immediate:
-			self._show_block(position, texture)
+			self._show_block(position, MATERIALS[texture])
 		else:
-			self._enqueue(self._show_block, position, texture)
+			self._enqueue(self._show_block, position, MATERIALS[texture])
 
 	def _show_block(self, position, texture):
 		""" Private implementation of the `show_block()` method.

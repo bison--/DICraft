@@ -58,7 +58,7 @@ class Window(pyglet.window.Window):
 		self.inventory = []
 		for i in range(0, len(MATERIALS), 10):
 			#print "inventory:",i, MATERIALS[i]
-			self.inventory.append(MATERIALS[i])
+			self.inventory.append(i)
 
 		# The current block the user can place. Hit num keys to cycle.
 		self.block = self.inventory[0]
@@ -234,7 +234,7 @@ class Window(pyglet.window.Window):
 			vector = self.get_sight_vector()
 			block, previous = self.model.hit_test(self.position, vector, EDIT_DISTANCE)
 			if block:
-				texture = self.model.world[block]
+				#texture = self.model.world[block]
 				self.model.remove_block(block)
 			self.mt.start("mouse.LEFT")
 		elif self.mt.duration("mouse.RIGHT") > self.mouseInteractionSpeed:
