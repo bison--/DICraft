@@ -32,7 +32,7 @@ you need **dcmj2pnm** what is part of the dcmtk
 At first, we have to convert some **DCM** files into an readable format.  
 This will convert **ALL** .dcm files under the given directory into the **tmp** directory.
 
-    python convert.py multiImageTest/
+    python convert.py multiImageTest/ tmp/
     
 With this command we create a *"voxel"* file our engine can work with.  
 This command will automatically overwrtite **"saves/quicksave.sav"** or with the command switch "savefile="  

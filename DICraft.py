@@ -410,6 +410,7 @@ class Window(pyglet.window.Window):
 			self.model.saveModule.saveWorld(self.model)
 		elif symbol == key.F6:
 			#self.model.saveModule.exportOpenScad(self.model)
+			#self.model.saveModule.exportStl(self.model)
 			self.model.saveModule.exportStlZ(self.model)
 		elif symbol == key.ESCAPE:
 			exit()

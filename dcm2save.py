@@ -8,8 +8,8 @@ import saveModule
 import multiTimer
 
 
-minVal = 40 #12850
-maxVal = 60  #13000 #13366
+minVal = 132 #12850
+maxVal = 136  #13000 #13366
 materialSwitch = 15
 
 # max len of material index we can use

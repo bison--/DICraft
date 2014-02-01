@@ -10,11 +10,13 @@ import blockWork
 class saveModule(object):
 	def __init__(self):		
 		self.saveFile = 'quicksave.sav'
-		self.saveFolder =  "saves"
+		self.saveFolder = "saves"
 		if len(sys.argv) > 1:
 			for arg in sys.argv:
 				if arg.startswith("savefile="):
 					self.saveFile = arg.replace("savefile=", "")
+				elif arg.startswith("sf="):
+					self.saveFile = arg.replace("sf=", "")
 		
 		self.printStuff("working with file: " + self.getSaveDest())
 				
@@ -186,7 +188,7 @@ class saveModule(object):
 			else:
 				# we need the difference between the coords!
 				writer.add_faces(self.getCubeFaces(x, y, zTubes[tube][0], zTubes[tube][1]-zTubes[tube][0]))
-					
+				
 		writer.close()
 		self.printStuff('export stl completed')
 		
@@ -194,14 +196,27 @@ class saveModule(object):
 		# cube size
 		s = 1.0
 		# cube corner points
-		p1 = (0+x, 0+y, 0+z)
-		p2 = (0+x, 0+y, s+z+zTop)
-		p3 = (0+x, s+y, 0+z)
-		p4 = (0+x, s+y, s+z+zTop)
-		p5 = (s+x, 0+y, 0+z)
-		p6 = (s+x, 0+y, s+z+zTop)
-		p7 = (s+x, s+y, 0+z)
-		p8 = (s+x, s+y, s+z+zTop)
+		#p1 = (0+x, 0+y, 0+z)
+		#p2 = (0+x, 0+y, s+z+zTop)
+		#p3 = (0+x, s+y, 0+z)
+		#p4 = (0+x, s+y, s+z+zTop)
+		#p5 = (s+x, 0+y, 0+z)
+		#p6 = (s+x, 0+y, s+z+zTop)
+		#p7 = (s+x, s+y, 0+z)
+		#p8 = (s+x, s+y, s+z+zTop)
+		#x, -z, y
+
+		# rotate X
+		# by: derf
+		ar = [x, -z, y]
+		p1 = (0+ar[0], 0+ar[1], 0+ar[2])
+		p2 = (0+ar[0], 0+ar[1], s+ar[2])
+		p3 = (0+ar[0], s+ar[1]-zTop, 0+ar[2])
+		p4 = (0+ar[0], s+ar[1]-zTop, s+ar[2])
+		p5 = (s+ar[0], 0+ar[1], 0+ar[2])
+		p6 = (s+ar[0], 0+ar[1], s+ar[2])
+		p7 = (s+ar[0], s+ar[1]-zTop, 0+ar[2])
+		p8 = (s+ar[0], s+ar[1]-zTop, s+ar[2])
 
 		# define the 6 cube faces
 		# faces just lists of 3 or 4 vertices
