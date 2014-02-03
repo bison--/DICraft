@@ -117,7 +117,7 @@ class Window(pyglet.window.Window):
 			if arg.startswith("rmVol="):
 				# collect and remove "small" volumes
 				self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), int(arg.replace("rmVol=", ""))) #10000)
-			elif arg.startswith("fillCavitis"):
+			elif arg.startswith("fillCavities"):
 				# fill empty space
 				self.blockWork.fillHoles()
 		

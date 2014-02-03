@@ -109,8 +109,8 @@ class signalHandler(object):
 		if self._ui.chkRemoveVoluminas.isChecked():
 			params.append("rmVol=" + str(self._ui.nutRemoveVoluminas.value()))
 		
-		if self._ui.chkFillCavitis.isChecked():
-			params.append("fillCavitis")
+		if self._ui.chkFillCavities.isChecked():
+			params.append("fillCavities")
 		
 		self.runScript(params)
 		self._ui.cmdStartEditor.setDisabled(False)

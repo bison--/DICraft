@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'convertGui.ui'
 #
-# Created: Sat Feb  1 20:53:18 2014
+# Created: Mon Feb  3 15:26:34 2014
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -157,9 +157,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_5.setMargin(0)
         self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
-        self.chkFillCavitis = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
-        self.chkFillCavitis.setObjectName(_fromUtf8("chkFillCavitis"))
-        self.horizontalLayout_5.addWidget(self.chkFillCavitis)
+        self.chkFillCavities = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
+        self.chkFillCavities.setObjectName(_fromUtf8("chkFillCavities"))
+        self.horizontalLayout_5.addWidget(self.chkFillCavities)
         self.tabWidget.addTab(self.tab_3, _fromUtf8(""))
         self.gridLayout.addWidget(self.tabWidget, 0, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -177,23 +177,23 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Convert", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("MainWindow", "Folder with DICOM files:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("MainWindow", "Folder with DICOM Files:", None, QtGui.QApplication.UnicodeUTF8))
         self.txtDcm.setText(QtGui.QApplication.translate("MainWindow", "multiImageTest/", None, QtGui.QApplication.UnicodeUTF8))
         self.cmdDcm.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.cmdStartConvert.setText(QtGui.QApplication.translate("MainWindow", "START", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "convert DCM", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("MainWindow", "Project name:", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Convert DCM", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("MainWindow", "Project Name:", None, QtGui.QApplication.UnicodeUTF8))
         self.txtProject.setText(QtGui.QApplication.translate("MainWindow", "testImage", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("MainWindow", ".sav", None, QtGui.QApplication.UnicodeUTF8))
         self.cmdStartToSave.setText(QtGui.QApplication.translate("MainWindow", "START", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "minimum gray value", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_7.setText(QtGui.QApplication.translate("MainWindow", "maximum gray value", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("MainWindow", "generate Project", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Minimum Gray Value", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Maximum Gray Value", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("MainWindow", "Generate Project", None, QtGui.QApplication.UnicodeUTF8))
         self.cmdStartEditor.setText(QtGui.QApplication.translate("MainWindow", "START", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("MainWindow", "select project:", None, QtGui.QApplication.UnicodeUTF8))
-        self.chkRemoveVoluminas.setText(QtGui.QApplication.translate("MainWindow", "remove voluminas smaller than:", None, QtGui.QApplication.UnicodeUTF8))
-        self.chkFillCavitis.setText(QtGui.QApplication.translate("MainWindow", "fill cavitis", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("MainWindow", "start Editor", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Select Project:", None, QtGui.QApplication.UnicodeUTF8))
+        self.chkRemoveVoluminas.setText(QtGui.QApplication.translate("MainWindow", "Remove Voluminas Smaller Than:", None, QtGui.QApplication.UnicodeUTF8))
+        self.chkFillCavities.setText(QtGui.QApplication.translate("MainWindow", "Fill Cavities", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("MainWindow", "Start Editor", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":
