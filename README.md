@@ -1,11 +1,11 @@
 # DICraft
 
-Convert DICOM files into voxel/pixelcloud and edit in Minecraft style.
+Convert DICOM files into voxel/pixelcloud and edit them Minecraft style.
 
 
 # DISCLAIMER
 
-This *"program"* is under **heavy** development and it is NOT guranteet,  
+This *"program"* is under **heavy** development and it is NOT guaranteed
 that these instructions always fit the actual behavior!
 
 
@@ -20,7 +20,7 @@ Others "maybe":
     sudo pip install pyglet python-dicom python-qt4
 
 In some distributions **python-dicom** is named **pydicom**  
-The conversion parts should work without GUI, so you will need QT4 **ONLY** when strating the GUI-Tools.  
+The conversion parts should work without GUI, so you will need Qt4 **ONLY** when strating the GUI-Tools.  
 
 If you want/have to convert DICOM files with **convert.py** that we can use them,  
 you need **dcmj2pnm** what is part of the dcmtk
@@ -45,7 +45,7 @@ Finally we can start the main program (if you named your file, you have to tell 
 
     python DICraft.py savefile=roflcopter.sav
 
-From here you can save your work with F5 or export it for 3D-Printing with F6
+From here you can save your work with F5 or export it for 3D printing with F6.
 
 ## Configuration
 
@@ -58,7 +58,7 @@ In **dcm2save.py** are 3 special configuraton variables:
 **minVal** and **maxVal** are the raw gray values from the image, every value in between would be displayed later.  
 You **HAVE** to play with those values to get an accurate result (later there will be a GUI for that....).  
 
-**materialSwitch** is in which intervals another Texture is picked.  
+**materialSwitch** is in which intervals another texture is picked.  
 You may have to play with it too.  
 The maximum value is 99.
 
