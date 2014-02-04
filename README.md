@@ -1,7 +1,11 @@
 # DICraft
 
-Convert DICOM files into voxel/pixelcloud and edit them Minecraft style.
+Convert DICOM files into voxel/pixelcloud, edit Minecraft style and 3D-print them.
 
+This project tries to fill the gap between X-ray imaging (slices, single images, ultrasound images) and 3D-printing.  
+For medical and scientific use (you will find application cases).
+
+Visit [projekt page](http://bison--.github.io/DICraft/)
 
 # DISCLAIMER
 
