@@ -21,6 +21,11 @@ class signalHandler(object):
 		QtCore.QObject.connect(self._ui.txtProject, QtCore.SIGNAL("textChanged(QString)"), self.txt_changed)
 		#print dir(self._ui.cmdStart)
 		
+		QtCore.QObject.connect(self._ui.nutMinGray, QtCore.SIGNAL("valueChanged(int)"), self.nutMinGray_changed)
+		QtCore.QObject.connect(self._ui.sldMinGray, QtCore.SIGNAL("valueChanged(int)"), self.sldMinGray_changed)
+		QtCore.QObject.connect(self._ui.nutMaxGray, QtCore.SIGNAL("valueChanged(int)"), self.nutMaxGray_changed)
+		QtCore.QObject.connect(self._ui.sldMaxGray, QtCore.SIGNAL("valueChanged(int)"), self.sldMaxGray_changed)
+		
 		#spinbox set range: .setRange(0,100)
 		
 		self.reFreshProjects()
@@ -73,7 +78,31 @@ class signalHandler(object):
 		self._dirExist(self._ui.txtDcm)
 		#self._dirExist(self._ui.txtTmp)
 		self._fileExist(self._ui.txtProject)
+	
+	def nutMinGray_changed(self):
+		self.minMaxVal_changed("nutMinGray")
+	
+	def sldMinGray_changed(self):
+		self.minMaxVal_changed("sldMinGray")
+
+	def nutMaxGray_changed(self):
+		self.minMaxVal_changed("nutMaxGray")
+	
+	def sldMaxGray_changed(self):
+		self.minMaxVal_changed("sldMaxGray")
 		
+	def minMaxVal_changed(self, name):
+		if self._ui.sldMinGray.value() != self._ui.nutMinGray.value():
+			if name == "nutMinGray":
+				self._ui.sldMinGray.setValue(self._ui.nutMinGray.value())
+			elif name == "sldMinGray":	
+				self._ui.nutMinGray.setValue(self._ui.sldMinGray.value())
+		elif self._ui.sldMaxGray.value() != self._ui.nutMaxGray.value():
+			if name == "nutMaxGray":
+				self._ui.sldMaxGray.setValue(self._ui.nutMaxGray.value())
+			elif name == "sldMaxGray":	
+				self._ui.nutMaxGray.setValue(self._ui.sldMaxGray.value())
+	
 	def _dirExist(self, lineEdit):
 		if os.path.isdir(lineEdit.text()):
 			lineEdit.setStyleSheet("QLineEdit {background-color: white;}")
@@ -98,7 +127,12 @@ class signalHandler(object):
 		
 	def cmdStartToSave_clicked(self):
 		self._ui.cmdStartToSave.setDisabled(True)
-		self.runScript(['python', 'dcm2save.py', self.tmpPath, "savefile=" + self._ui.txtProject.text() + ".sav"])
+		self.runScript(['python', 'dcm2save.py',
+			self.tmpPath,
+			"savefile=" + self._ui.txtProject.text() + ".sav",
+			"minVal=" + str(self._ui.nutMinGray.value()),
+			"maxVal=" + str(self._ui.nutMaxGray.value())
+			])
 		self._ui.cmdStartToSave.setDisabled(False)
 		
 	def cmdStartEditor_clicked(self):

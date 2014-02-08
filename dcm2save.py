@@ -8,8 +8,8 @@ import saveModule
 import multiTimer
 
 
-minVal = 132 #12850
-maxVal = 136  #13000 #13366
+minVal = 1 #12850
+maxVal = 4  #13000 #13366
 materialSwitch = 15
 
 # max len of material index we can use
@@ -54,6 +54,15 @@ sourceFiles = []
 if len(sys.argv) > 1:
 	sourceFolder = sys.argv[1]
 
+for arg in sys.argv:
+	if arg.startswith("minVal="):
+		minVal = int(arg.replace("minVal=", ""))
+	elif arg.startswith("maxVal="):
+		maxVal = int(arg.replace("maxVal=", ""))
+	elif arg.startswith("materialSwitch="):
+		materialSwitch = int(arg.replace("materialSwitch=", ""))
+	elif arg.startswith("heightMap="):
+		heightMap = bool(int(arg.replace("heightMap=", "")))
 
 if heightMap:
 	sourceFiles.append(sys.argv[1])
@@ -373,6 +382,36 @@ def getFromPnm():
 		
 	return finalStr
 	
+
+def flip_vert(picture):
+	width = getWidth(picture)
+	height = getHeight(picture)
+
+	for y in range(0, height/2):
+		for x in range(0, width):
+			sourcePixel = getPixel(picture, x, y)
+			targetPixel = getPixel(picture, x, height - y - 1)
+			color = getColor(sourcePixel)
+			setColor(sourcePixel, getColor(targetPixel))
+			setColor(targetPixel, color)
+
+	return picture 
+
+
+def flip_horiz(picture):
+	width = getWidth(picture)
+	height = getHeight(picture)
+
+	for y in range(0, height):
+		for x in range(0, width/2):
+			sourcePixel = getPixel(picture, x, y)
+			targetPixel = getPixel(picture, width - x - 1, y)
+			color = getColor(sourcePixel)
+			setColor(sourcePixel, getColor(targetPixel))
+			setColor(targetPixel, color)
+
+	return picture 
+
 #fh = open('testImg', "w")
 #fh.write(getCompressed())
 #fh.close()

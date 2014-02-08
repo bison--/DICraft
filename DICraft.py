@@ -117,9 +117,9 @@ class Window(pyglet.window.Window):
 			if arg.startswith("rmVol="):
 				# collect and remove "small" volumes
 				self.blockWork.removeSmallVolumes(self.blockWork.getVolumes(), int(arg.replace("rmVol=", ""))) #10000)
-			elif arg.startswith("fillCavities"):
+			elif arg.startswith("fillCavities="):
 				# fill empty space
-				self.blockWork.fillHoles()
+				self.blockWork.fillHoles(int(arg.replace("fillCavities=", "")))
 		
 		# add timer and bool for the initial loading text while rendereing the world
 		# for the first time
