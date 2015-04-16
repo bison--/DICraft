@@ -134,6 +134,7 @@ class signalHandler(object):
 			"maxVal=" + str(self._ui.nutMaxGray.value())
 			])
 		self._ui.cmdStartToSave.setDisabled(False)
+		self.reFreshProjects()
 		
 	def cmdStartEditor_clicked(self):
 		self._ui.cmdStartEditor.setDisabled(True)
