@@ -15,6 +15,21 @@ that these instructions always fit the actual behavior!
 
 # Installation
 
+Create a venv and install the requirements:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+If you want/have to convert DICOM files with **convert.py** that we can use them,  
+you need **dcmj2pnm** what is part of the dcmtk
+```bash
+    sudo apt-get install dcmtk
+```
+
+## OLD (for reference only)
+
 Debian based:
 
     sudo apt-get install python-pyglet python-dicom python-qt4
@@ -40,7 +55,7 @@ This will convert **ALL** .dcm files under the given directory into the **tmp** 
     python convert.py multiImageTest/ tmp/
     
 With this command we create a *"voxel"* file our engine can work with.  
-This command will automatically overwrtite **"saves/quicksave.sav"** or with the command switch "savefile="  
+This command will automatically overwrite **"saves/quicksave.sav"** or with the command switch "savefile="  
 you can name the destination file.
 
     python dcm2save.py tmp/ savefile=roflcopter.sav

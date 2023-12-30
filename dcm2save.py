@@ -7,9 +7,8 @@ import pnmHeader
 import saveModule
 import multiTimer
 
-
-minVal = 1 #12850
-maxVal = 4  #13000 #13366
+minVal = 130  #12850
+maxVal = 136  #13000 #13366
 materialSwitch = 15
 
 # max len of material index we can use

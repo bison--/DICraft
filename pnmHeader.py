@@ -47,7 +47,7 @@ def read_pnm_header(infile, supported=('P5','P6')):
     def getc():
         c = infile.read(1)
         if not c:
-            raise Error('premature EOF reading PNM header')
+            raise Exception('premature EOF reading PNM header')
         return c
 
     c = getc()
@@ -60,8 +60,8 @@ def read_pnm_header(infile, supported=('P5','P6')):
             while c not in '\n\r':
                 c = getc()
         if not c.isdigit():
-            print 'unexpected character %s found in header' % c
-            raise Error('unexpected character %s found in header' % c)
+            print('unexpected character %s found in header' % c)
+            raise Exception('unexpected character %s found in header' % c)
         # According to the specification it is legal to have comments
         # that appear in the middle of a token.
         # This is bonkers; I've never seen it; and it's a bit awkward to
@@ -81,7 +81,7 @@ def read_pnm_header(infile, supported=('P5','P6')):
         while c not in '\n\r':
             c = getc()
     if not c.isspace():
-        raise Error('expected header to end with whitespace, not %s' % c)
+        raise Exception('expected header to end with whitespace, not %s' % c)
 
     if type in pbm:
         # synthesize a MAXVAL
