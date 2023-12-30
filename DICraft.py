@@ -66,7 +66,8 @@ class Window(pyglet.window.Window):
 		# Convenience list of num keys.
 		self.num_keys = [
 			key._1, key._2, key._3, key._4, key._5,
-			key._6, key._7, key._8, key._9, key._0]
+			key._6, key._7, key._8, key._9, key._0
+		]
 
 		# the block that is currently focused
 		self.focusedBlock = None
@@ -198,7 +199,7 @@ class Window(pyglet.window.Window):
 			self.sector = sector
 		m = 8
 		dt = min(dt, 0.2)
-		for _ in xrange(m):
+		for _ in range(m):
 			self._update(dt / m)
 
 	def _update(self, dt):
@@ -268,13 +269,13 @@ class Window(pyglet.window.Window):
 		p = list(position)
 		np = normalize(position)
 		for face in FACES:  # check all surrounding blocks
-			for i in xrange(3):  # check each dimension independently
+			for i in range(3):  # check each dimension independently
 				if not face[i]:
 					continue
 				d = (p[i] - np[i]) * face[i]
 				if d < pad:
 					continue
-				for dy in xrange(height):  # check each height
+				for dy in range(height):  # check each height
 					op = list(np)
 					op[1] -= dy
 					op[i] += face[i]
@@ -416,15 +417,26 @@ class Window(pyglet.window.Window):
 			#self.model.saveModule.exportStl(self.model)
 			self.model.saveModule.exportStlZ(self.model)
 		elif symbol == key.ESCAPE:
-			exit()
+			#exit()
+			#sys.exit()
+			self.exit()
 		elif symbol == key.F1:
 			self.set_exclusive_mouse(False)
+		elif symbol == key.F2:
+			# test code
+			self.force_show()
 		elif symbol == key.TAB:
 			self.flying = not self.flying
 		elif symbol in self.num_keys:
 			index = (symbol - self.num_keys[0]) % len(self.inventory)
-			print index
+			print(index)
 			self.block = self.inventory[index]
+
+	def force_show(self):
+		# dirty hack to force rendering
+		for position, data in self.model.world.items():
+			if self.model.exposed(position):
+				self.model._show_block(position, data)
 
 	def on_key_release(self, symbol, modifiers):
 		""" Called when the player releases a key. See pyglet docs for key
@@ -471,7 +483,7 @@ class Window(pyglet.window.Window):
 		x, y = self.width / 2, self.height / 2
 		n = 10
 		self.reticle = pyglet.graphics.vertex_list(4,
-			('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
+			('v2f', (x - n, y, x + n, y, x, y - n, x, y + n))
 		)
 
 	def set_2d(self):

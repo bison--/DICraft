@@ -104,10 +104,11 @@ class statistics(object):
 			
 	def printStats(self):
 		self.mt.stop("runtime")
-		print "duration:", self.mt.duration("runtime")
-		print "minValue:", self.minValue
-		print "maxValue:", self.maxValue
-		print "accepted values:", self.totalAcceptedValues, "/", self.totalValues
+		print("duration:", self.mt.duration("runtime"))
+		print("minValue:", self.minValue)
+		print("maxValue:", self.maxValue)
+		print("accepted values:", self.totalAcceptedValues, "/", self.totalValues)
+
 
 STATS = statistics()
 
@@ -118,7 +119,7 @@ def getUncompressed():
 	countY = 0
 	countZ = 0
 	for z in sourceFiles:
-		print z
+		print(z)
 		ds = dicom.read_file(z)
 
 		countX = 0
@@ -128,7 +129,7 @@ def getUncompressed():
 			for y in x:
 				if y >= minVal and y <= maxVal:
 					material = 0
-					for i in xrange(materialMatrixL):
+					for i in range(materialMatrixL):
 						if y > minVal + materialSwitch * i:
 							material = i
 
@@ -164,10 +165,10 @@ def getFromImage():
 	countY = 0
 	countZ = 0
 	for z in sourceFiles:
-		print z
+		print(z)
 		im = Image.open(z) #Can be many different formats.
 		pix = im.load()
-		print im.size #Get the width and hight of the image for iterating over
+		print(im.size)  # Get the width and hight of the image for iterating over
 		width, height = im.size
 
 		#print pix[x,y] #Get the RGBA Value of the a pixel of an image
@@ -179,10 +180,10 @@ def getFromImage():
 				#http://docs.python.org/dev/library/stdtypes.html#int.from_bytes
 				#argb = int.from_bytes(pix[x, y], byteorder='little', signed=False) # only python 3
 				#d = int(s.encode('hex'), 16)
-				print dir(pix)
-				print pix[x, y]  # always 0, wtf?
+				print(dir(pix))
+				print(pix[x, y])  # always 0, wtf?
 				argb = makelongByTup(pix[x, y])
-				print argb
+				print(argb)
 				exit()
 				if argb >= minVal and argb <= maxVal:
 					material = "GRASS"
@@ -208,12 +209,12 @@ def getCompressed():
 	countY = 0
 	countZ = 0
 	for z in sourceFiles:
-		print z
+		print(z)
 		ds = dicom.read_file(z)
 		pixel_bytes = ds.PixelData
 		#print pixel_bytes
 		#print ds.items()[0]
-		print ds.__dict__
+		print(ds.__dict__)
 		return pixel_bytes
 		countX = 0
 		for x in ds.pixel_array:
@@ -260,29 +261,29 @@ def getFromPgm():
 		z = 'tmp/3DSlice57.dcm.pgm'
 		if countVoxel >= 100000:
 			break
-		print z
+		print(z)
 		#z = sourceFiles[1]
 		pnm = readPnm(z)
 		width = pnm["width"]
 		height = pnm["height"]
 
 		countX = 0
-		for x in xrange(width):#pnm["pixels"]:
+		for x in range(width):#pnm["pixels"]:
 			countY = 0
-			for y in xrange(height):#x:
+			for y in range(height):#x:
 				#print x,y
 				#pixVal = pnm["pixels"][x][y]
 				#pixVal = y
 				index = (countX * width) + y
 				if index >= len(pnm["pixels"]):
-					print index, len(pnm["pixels"])
+					print(index, len(pnm["pixels"]))
 					break
 					
 				pixVal = pnm["pixels"][index]
 				#print pixVal
 				if pixVal >= minVal and pixVal <= maxVal:
 					material = "GRASS"
-					for i in xrange(materialMatrixL):
+					for i in range(materialMatrixL):
 						if pixVal > minVal + materialSwitch * i:
 							material = materialMatrix[i]
 					
@@ -326,16 +327,16 @@ def getFromPnm():
 	for z in sourceFiles:
 		#if countVoxel >= 200000:
 		#	break
-		print z
+		print(z)
 		#z = sourceFiles[1]
 		pnm = readPnm(z)
 		width = pnm["width"]
 		height = pnm["height"]
 
 		countX = 0
-		for x in xrange(width):#pnm["pixels"]:
+		for x in range(width):#pnm["pixels"]:
 			countY = 0
-			for y in xrange(height):#x:
+			for y in range(height):#x:
 				#print x,y
 				#pixVal = pnm["pixels"][x][y]
 				#pixVal = y
@@ -375,8 +376,8 @@ def getFromPnm():
 				countY += 1
 			countX += 1
 		countZ += 1
-		print "current voxel:", countVoxel
-		#if countZ > 10:
+		print("current voxel:", countVoxel)
+	#if countZ > 10:
 		#	break
 		#finalStr += "\n"
 		

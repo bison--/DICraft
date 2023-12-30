@@ -41,7 +41,7 @@ class signalHandler(object):
 		self._ui.txtDcm.setText(dirName)
 		
 	def runScript(self, parList):
-		print "COMMANDS:", parList
+		print("COMMANDS:", parList)
 		from subprocess import Popen, PIPE
 		import time
 		proc = Popen(parList, stdout=PIPE, stderr=PIPE)
@@ -55,17 +55,18 @@ class signalHandler(object):
 			else: # No process is done, wait a bit and check again.
 				time.sleep(0.1)
 				continue
-		 	tmp += proc.stdout.read(1)
-		 	if tmp != "" and tmp.contains("\n"):
-		 		print tmp
-		 		tmp = ""
-		 		
-		print proc.stdout.read()
-		
+
+			tmp += proc.stdout.read(1)
+			if tmp != "" and tmp.contains("\n"):
+				print(tmp)
+				tmp = ""
+
+		print(proc.stdout.read())
+
 		# Here, `proc` has finished with return code `retcode`
 		if retcode != 0:
 			"""Error handling."""
-			print "ERROR"
+			print("ERROR")
 			return False
 		else:
 			return True

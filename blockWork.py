@@ -43,7 +43,7 @@ class blockWork(object):
 			x, y, z = start_block
 			block_collection + self._get_neighbor_blocks(start_block, block_collection)
 		
-		print "removing blocks:", len(block_collection)
+		print("removing blocks:", len(block_collection))
 		for b in block_collection:
 			self.remove_block(b)
 
@@ -64,16 +64,16 @@ class blockWork(object):
 					break
 					
 			if not isScanned:
-				print blocksCurrent, "/", blocksTotal
+				print(blocksCurrent, "/", blocksTotal)
 				#print "found new volume:", block
 				volumeList.append(self.getConnectedBlocks(block))
 				#print "volume size:", volumeList[len(volumeList)-1]
 				
 		for volume in volumeList:
-			print "size:", len(volume)
-			
-		print "found", len(volumeList), "connected volumes"
-			
+			print("size:", len(volume))
+
+		print("found", len(volumeList), "connected volumes")
+
 		return volumeList
 
 	def getConnectedBlocks(self, startBlock):
@@ -98,7 +98,8 @@ class blockWork(object):
 				
 				if self.mt.duration("getConnectedBlocks") >= 10:
 					self.mt.start("getConnectedBlocks")
-					print "still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10 ,"/s)"
+					print("still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10,
+						  "/s)")
 					blockCountCurrent = 0
 						
 		return blockCollection
@@ -134,7 +135,8 @@ class blockWork(object):
 				
 				if self.mt.duration("getConnectedBlocks") >= 10:
 					self.mt.start("getConnectedBlocks")
-					print "still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10 ,"/s)"
+					print("still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10,
+						  "/s)")
 					blockCountCurrent = 0
 
 		return blockCollection
@@ -146,7 +148,7 @@ class blockWork(object):
 		for volume in volumeList:
 			volCounter += 1
 			if len(volume) < smallest:
-				print "removing volume:", volCounter, "/", len(volumeList), "(", len(volume), "blocks)"
+				print("removing volume:", volCounter, "/", len(volumeList), "(", len(volume), "blocks)")
 				rmCounter = 0
 				rmCounterTotal = 0
 				for key in volume.keys():
@@ -155,14 +157,14 @@ class blockWork(object):
 					if rmCounter >= 100:
 						rmCounterTotal += rmCounter
 						rmCounter = 0
-						print rmCounterTotal, "/", len(volume)
-		
+						print(rmCounterTotal, "/", len(volume))
+
 	def removeBlockIsle(self, startBlock):
 		""" removes ALL blocks connected to the given block!
 		"""
 		if startBlock:
 			blockCollection = self.getConnectedBlocks(startBlock)
-			print "removing blocks:", len(blockCollection)
+			print("removing blocks:", len(blockCollection))
 			rmCounter = 0
 			rmCounterTotal = 0
 			for b in blockCollection.keys():
@@ -171,24 +173,23 @@ class blockWork(object):
 				if rmCounter >= 100:
 					rmCounterTotal += rmCounter
 					rmCounter = 0
-					print rmCounterTotal, "/", len(blockCollection)
-					
-			print rmCounterTotal, "/", len(blockCollection)
-			print "removing completed"
-	
-	
+					print(rmCounterTotal, "/", len(blockCollection))
+
+			print(rmCounterTotal, "/", len(blockCollection))
+			print("removing completed")
+
 	def fillHoles(self, smallest=10000):
 		spaceList = self.getHoles()
-		print "found", len(spaceList), "holes"
-		
+		print("found", len(spaceList), "holes")
+
 		for hole in spaceList:
 			if len(hole) < smallest:
-				print "filling hole", len(hole)
+				print("filling hole", len(hole))
 				for space in hole:
 					self.model.add_block(space)
-		
-		print "fillHoles completed"
-	
+
+		print("fillHoles completed")
+
 	def getWorldBoundaries(self, addSpace=True):
 		axRange = range(3)
 		boundaries = [[None, None], [None, None], [None, None]]
@@ -247,7 +248,7 @@ class blockWork(object):
 				key = (x + dx, y + dy, z + dz)
 				
 				if not key in self.model.world and not key in spaceToCheck and not key in checkedBlocks and self.isInWorldBoundaries(key, boundaries):
-					print "spaceToCheck.append(key)", key
+					print("spaceToCheck.append(key)", key)
 					spaceToCheck.append(key)
 			
 			while spaceToCheck:
@@ -281,8 +282,9 @@ class blockWork(object):
 				
 				if self.mt.duration("getConnectedBlocks") >= 10:
 					self.mt.start("getConnectedBlocks")
-					print "still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10 ,"/s)"
+					print("still alive, found", len(blockCollection), "voxel so far", "(", blockCountCurrent / 10,
+						  "/s)")
 					blockCountCurrent = 0
-		
-		print "found space volume:", len(blockCollection)
+
+		print("found space volume:", len(blockCollection))
 		return blockCollection

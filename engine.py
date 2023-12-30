@@ -78,7 +78,7 @@ TEXTURE_PATH = 'texture.png'
 #STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 MATERIALS = []
-for i in xrange(100):
+for i in range(100):
 	MATERIALS.append(tex_coords_simple(i))
 
 
@@ -169,18 +169,25 @@ class Model(object):
 		
 		if self.saveModule.hasSaveFile() == True:
 			self.saveModule.loadWorld(self)
+			self.force_show()
 		else:
-			print "no savefile, generating sample"
+			print("no savefile, generating sample")
 			
-			for x in xrange(len(MATERIALS)):
+			for x in range(len(MATERIALS)):
 				self.add_block((x, 0, 0), MATERIALS[x], immediate=False)
 				
-			for z in xrange(len(MATERIALS)):
+			for z in range(len(MATERIALS)):
 				self.add_block((0, z, 1), MATERIALS[z], immediate=False)
 				
-			for y in xrange(len(MATERIALS)):
+			for y in range(len(MATERIALS)):
 				self.add_block((0, 2, y), MATERIALS[y], immediate=False)
-		
+
+	def force_show(self):
+		# dirty hack to force rendering
+		for position, data in self.world.items():
+			if self.exposed(position):
+				self._show_block(position, data)
+
 	def hit_test(self, position, vector, max_distance=8):
 		""" Line of sight search from current position. If a block is
 		intersected it is returned, along with the block previously in the line
@@ -200,7 +207,7 @@ class Model(object):
 		x, y, z = position
 		dx, dy, dz = vector
 		previous = None
-		for _ in xrange(max_distance * m):
+		for _ in range(max_distance * m):
 			key = normalize((x, y, z))
 			if key != previous and key in self.world:
 				return key, previous
@@ -228,7 +235,7 @@ class Model(object):
 		previous = None
 		
 		rangeCounter = 0
-		for _ in xrange(max_distance * m):
+		for _ in range(max_distance * m):
 			rangeCounter += 1
 			if rangeCounter == max_distance * m:
 				key = normalize((x, y, z))
@@ -342,7 +349,13 @@ class Model(object):
 		"""
 		x, y, z = position
 		vertex_data = cube_vertices(x, y, z, CUBE_SIZE)
-		texture_data = list(texture)
+
+		texture_data = None
+		if type(texture) is int:
+			texture_data = list(MATERIALS[texture])
+		else:
+			texture_data = list(texture)
+
 		# create vertex list
 		# FIXME Maybe `add_indexed()` should be used instead
 		self._shown[position] = self.batch.add(24, GL_QUADS, self.group,
@@ -371,16 +384,18 @@ class Model(object):
 		""" Private implementation of the 'hide_block()` method.
 
 		"""
-		self._shown.pop(position).delete()
+		if position in self._shown:
+			self._shown.pop(position).delete()
 
 	def show_sector(self, sector):
 		""" Ensure all blocks in the given sector that should be shown are
 		drawn to the canvas.
 
 		"""
-		for position in self.sectors.get(sector, []):
-			if position not in self.shown and self.exposed(position):
-				self.show_block(position, False)
+		#for position in self.sectors.get(sector, []):
+		#	if position not in self.shown and self.exposed(position):
+		#		self.show_block(position, False)
+		pass
 
 	def hide_sector(self, sector):
 		""" Ensure all blocks in the given sector that should be hidden are
@@ -400,9 +415,9 @@ class Model(object):
 		before_set = set()
 		after_set = set()
 		pad = 4
-		for dx in xrange(-pad, pad + 1):
+		for dx in range(-pad, pad + 1):
 			for dy in [0]:  # xrange(-pad, pad + 1):
-				for dz in xrange(-pad, pad + 1):
+				for dz in range(-pad, pad + 1):
 					if dx ** 2 + dy ** 2 + dz ** 2 > (pad + 1) ** 2:
 						continue
 					if before:
@@ -438,8 +453,8 @@ class Model(object):
 		add_block() or remove_block() was called with immediate=False
 
 		"""
-		start = time.clock()
-		while self.queue and time.clock() - start < 1 / 60.0:
+		start = time.perf_counter()
+		while self.queue and time.perf_counter() - start < 1 / 60.0:
 			self._dequeue()
 
 	def process_entire_queue(self):
