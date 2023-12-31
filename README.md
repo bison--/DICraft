@@ -28,25 +28,6 @@ you need **dcmj2pnm** what is part of the dcmtk
     sudo apt-get install dcmtk
 ```
 
-## OLD (for reference only)
-
-Debian based:
-
-    sudo apt-get install python-pyglet python-dicom python-qt4
-
-Others "maybe":
-
-    sudo pip install pyglet python-dicom python-qt4
-
-In some distributions **python-dicom** is named **pydicom**  
-The conversion parts should work without GUI, so you will need Qt4 **ONLY** when strating the GUI-Tools.  
-
-If you want/have to convert DICOM files with **convert.py** that we can use them,  
-you need **dcmj2pnm** what is part of the dcmtk
-
-    sudo apt-get install dcmtk
-
-
 # USE
 
 At first, we have to convert some **DCM** files into an readable format.  
@@ -66,9 +47,20 @@ Finally we can start the main program (if you named your file, you have to tell 
 
 From here you can save your work with F5 or export it for 3D printing with F6.
 
+### example
+
+Placed my MRT scans in **tmp/my/** and want to save the result in **tmp/**  
+
+```bash
+python convert.py tmp/my/ tmp/
+python dcm2save.py tmp/ savefile=bison_brain.sav minVal=10 maxVal=255 materialSwitch=10
+python DICraft.py savefile=bison_brain.sav
+```
+
+
 ## Configuration
 
-In **dcm2save.py** are 3 special configuraton variables:  
+In **dcm2save.py** are 3 special configuration variables:  
 
     minVal = 130
     maxVal = 134
@@ -80,6 +72,12 @@ You **HAVE** to play with those values to get an accurate result (later there wi
 **materialSwitch** is in which intervals another texture is picked.  
 You may have to play with it too.  
 The maximum value is 99.
+
+All 3 have command line switches too.
+
+```bash
+python dcm2save.py tmp/ savefile=bison_brain.sav minVal=10 maxVal=255 materialSwitch=10
+```
 
 # Controls
 
@@ -101,5 +99,24 @@ focus a block, press **"DEL"** and all blocks that stick together are removed
 This may take "forever", be careful!
 **USE WITH CARE** 
 
+# LEGACY
 
+old stuff/for reference only
 
+## OLD installation
+
+Debian based:
+
+    sudo apt-get install python-pyglet python-dicom python-qt4
+
+Others "maybe":
+
+    sudo pip install pyglet python-dicom python-qt4
+
+In some distributions **python-dicom** is named **pydicom**  
+The conversion parts should work without GUI, so you will need Qt4 **ONLY** when strating the GUI-Tools.  
+
+If you want/have to convert DICOM files with **convert.py** that we can use them,  
+you need **dcmj2pnm** what is part of the dcmtk
+
+    sudo apt-get install dcmtk
