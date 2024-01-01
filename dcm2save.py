@@ -10,6 +10,7 @@ import multiTimer
 minVal = 130  #12850
 maxVal = 136  #13000 #13366
 materialSwitch = 15
+maxVoxels = -1
 
 # max len of material index we can use
 materialMatrixL = 99 #len(materialMatrix)
@@ -62,6 +63,8 @@ for arg in sys.argv:
 		materialSwitch = int(arg.replace("materialSwitch=", ""))
 	elif arg.startswith("heightMap="):
 		heightMap = bool(int(arg.replace("heightMap=", "")))
+	elif arg.startswith("maxVoxels="):
+		maxVoxels = int(arg.replace("maxVoxels=", ""))
 
 if heightMap:
 	sourceFiles.append(sys.argv[1])
@@ -376,6 +379,8 @@ def getFromPnm():
 			countX += 1
 		countZ += 1
 		print("current voxel:", countVoxel)
+		if maxVoxels != -1 and countVoxel >= maxVoxels:
+			break
 	#if countZ > 10:
 		#	break
 		#finalStr += "\n"

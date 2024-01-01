@@ -65,6 +65,7 @@ In **dcm2save.py** are 3 special configuration variables:
     minVal = 130
     maxVal = 134
     materialSwitch = 15
+    maxVoxels = -1
 
 **minVal** and **maxVal** are the raw gray values from the image, every value in between would be displayed later.  
 You **HAVE** to play with those values to get an accurate result (later there will be a GUI for that....).  
@@ -73,7 +74,10 @@ You **HAVE** to play with those values to get an accurate result (later there wi
 You may have to play with it too.  
 The maximum value is 99.
 
-All 3 have command line switches too.
+**maxVoxels** is the maximum number of voxels to be processed.
+If you have a large dataset, you can limit the number of voxels to be processed.
+
+All have command line switches too.
 
 ```bash
 python dcm2save.py tmp/ savefile=bison_brain.sav minVal=10 maxVal=255 materialSwitch=10

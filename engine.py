@@ -184,9 +184,11 @@ class Model(object):
 
 	def force_show(self):
 		# dirty hack to force rendering
+		counter = 0
 		for position, data in self.world.items():
 			if self.exposed(position):
 				self._show_block(position, data)
+				counter += 1
 
 	def hit_test(self, position, vector, max_distance=8):
 		""" Line of sight search from current position. If a block is
