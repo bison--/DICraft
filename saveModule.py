@@ -8,7 +8,10 @@ import blockWork
 
 		
 class saveModule(object):
-	def __init__(self):		
+	def __init__(self):
+		# max voxels to load
+		self.maxVoxels = 10000000
+
 		self.saveFile = 'quicksave.sav'
 		self.saveFolder = "saves"
 		if len(sys.argv) > 1:
@@ -17,14 +20,13 @@ class saveModule(object):
 					self.saveFile = arg.replace("savefile=", "")
 				elif arg.startswith("sf="):
 					self.saveFile = arg.replace("sf=", "")
+				elif arg.startswith("maxVoxels="):
+					self.maxVoxels = int(arg.replace("maxVoxels=", ""))
 		
 		self.printStuff("working with file: " + self.getSaveDest())
 				
 		# console output after X lines
 		self.maxLineCounter = 10000
-		
-		# max voxels to load
-		self.maxVoxels = 10000000
 		
 	def printStuff(self, txt):
 		print(strftime("%d-%m-%Y %H:%M:%S|", gmtime()) + str(txt) ) 
