@@ -16,5 +16,7 @@ The MakerBot Replicator 2 3D printer supports the following file type(s):
 
 commands for testing
 
-png2save.py tmp/Seq_5_T2_FL2D_TRA_STERN_png savefile=bison_brain.sav minVal=1 maxVal=50 materialSwitch=10 cutRectangle_=398,69,878,851
+png2save.py tmp/Seq_5_T2_FL2D_TRA_STERN_png savefile=bison_brain.sav minVal=10 maxVal=256 materialSwitch=10 cutRectangle=398,69,878,851 resize=256,256
 python DICraft.py savefile=bison_brain.sav maxVoxels=1000000
+
+python png2save.py tmp/Seq_9_EP2D_DIFF_3_5MM savefile=bison_brain.sav minVal=50 maxVal=256 materialSwitch=10 cutRectangle=358,36,940,913 resize=256,256

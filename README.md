@@ -12,6 +12,17 @@ Visit [projekt page](http://bison--.github.io/DICraft/)
 This *"program"* is under **heavy** development and it is NOT guaranteed
 that these instructions always fit the actual behavior!
 
+# note
+
+Current workflow:
+* convert DICOM files into PNG files with an external software (my MRT-scans came with a software that could export series as PNG)
+* convert PNG files into a voxel file with **png2save.py**
+
+in my example:
+```bash
+python png2save.py tmp/Seq_9_EP2D_DIFF_3_5MM_pnd savefile=bison_brain.sav minVal=50 maxVal=256 materialSwitch=4 cutRectangle=358,36,940,913 resize=256,256
+python DICraft.py savefile=bison_brain.sav maxVoxels=1000000
+```
 
 # Installation
 
@@ -59,6 +70,21 @@ python DICraft.py savefile=bison_brain.sav
 
 
 ## Configuration
+
+### png2save
+
+```
+minVal = 130
+maxVal = 134
+materialSwitch = 15
+maxVoxels = -1
+resize = 256,256
+cutRectangle = 398,69,878,851
+```
+
+cutRectangle = x,y,width,height
+
+### dcm2save
 
 In **dcm2save.py** are 3 special configuration variables:  
 

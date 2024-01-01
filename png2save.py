@@ -18,6 +18,9 @@ maxVoxels = -1
 useCutArea = False
 cutRectangle = (0, 0, 0, 0)
 
+useResize = False
+resizeSize = (0, 0)
+
 # max len of material index we can use
 materialMatrixL = 99 #len(materialMatrix)
 
@@ -74,10 +77,15 @@ for arg in sys.argv:
 		heightMap = bool(int(arg.replace("heightMap=", "")))
 	elif arg.startswith("maxVoxels="):
 		maxVoxels = int(arg.replace("maxVoxels=", ""))
+	elif arg.startswith("resize="):
+		useResize = True
+		resizeSizeParts = arg.replace("resize=", "").split(",")
+		resizeSize = (int(resizeSizeParts[0]), int(resizeSizeParts[1]))
 	elif arg.startswith("cutRectangle="):
 		useCutArea = True
 		cutRectangleParts = arg.replace("cutRectangle=", "").split(",")
 		cutRectangle = (int(cutRectangleParts[0]), int(cutRectangleParts[1]), int(cutRectangleParts[2]), int(cutRectangleParts[3]))
+		cutRectangle = (cutRectangle[0], cutRectangle[1], cutRectangle[2] + cutRectangle[0], cutRectangle[3] + cutRectangle[1])
 
 if heightMap:
 	sourceFiles.append(sys.argv[1])
@@ -126,6 +134,11 @@ def readPng(filename):
 	if useCutArea:
 		#img = ImageOps.crop(img, cutRectangle)
 		img = img.crop(cutRectangle)
+		# debug
+		# img.show()
+
+	if useResize:
+		img.thumbnail(resizeSize, Image.Resampling.NEAREST)
 
 	return {
 		"width": img.size[0],
@@ -158,7 +171,7 @@ def getFromPng():
 				#print x,y
 				#pixVal = pnm["pixels"][x][y]
 				#pixVal = y
-				index = (countX * width) + y
+				index = (y * width) + x
 				if index >= png["pixelCount"]:
 					#print countX, index, len(pnm["pixels"])
 					print("index out of range")
@@ -191,6 +204,7 @@ def getFromPng():
 		countZ += 1
 		print("current voxel:", countVoxel)
 		if maxVoxels != -1 and countVoxel >= maxVoxels:
+			print("maxVoxels reached")
 			break
 		
 	return "".join(rows)
